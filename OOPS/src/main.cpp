@@ -2,38 +2,173 @@
 #include <ncurses.h>
 
 #define GET_TIME_MS std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()
-#define IS_CHAR(c) (c>='a' && c<='z') || (c>='A' && c<='Z') || (c>='0' && c<='9') || c=='_'
+#define IS_CHAR(c, str) (c>='a' && c<='z') || (c>='A' && c<='Z') || (c>='0' && c<='9') || c=='_' || str.find(c)<str.length()
+
+
+int ncurses_menu(std::vector<std::string> choices){
+    int len = choices.size(), mode;
+    int xMax, yMax;
+    getmaxyx(stdscr, yMax, xMax);
+    // printf("Hello");
+    // printf("%d %d", xMax, yMax);
+    // int cols = min(len+2, )
+    WINDOW *menuwin = newwin(len+2, xMax-3, 2, 2);
+    box(menuwin, 0, 0);
+    refresh();
+    
+    
+    wrefresh(menuwin);
+    keypad(menuwin, true);
+    int highlight = 0;
+    while(1){
+        for(int i=0;i!=len;i++){
+            if(((highlight%len)+len)%len == i)
+                wattron(menuwin, A_REVERSE);
+            mvwprintw(menuwin, i+1, 1, choices[i].c_str());
+            wattroff(menuwin, A_REVERSE);
+        }
+        auto choice = wgetch(menuwin);
+        switch(choice){
+            case KEY_UP:
+                highlight-=1;
+                break;
+            case KEY_DOWN:
+                highlight+=1;
+                break;
+            default:
+                break;   
+        }
+        if (choice == 10){
+            // printf("Here");
+            mode = ((highlight%len)+len)%len;
+            std::cout << highlight;
+            break;
+        }
+    }
+    clear();
+    endwin();
+    // printf("%d %d", xMax, yMax);
+    return mode;
+}
+
+std::string ncurses_input_string(std::string prompt_text, bool masked = false, std::string extra_chars = std::string("")){
+    if(!masked){
+        std::string result;
+        
+            while(1){
+                clear();
+                printw("%s%s", prompt_text.c_str(),result.c_str());
+                
+                refresh(); // Print the prompt
+                auto choice = getch();
+                if (IS_CHAR(choice, extra_chars)){
+                    result.push_back(choice);
+                }
+                else if (choice == 127) {
+                    result.pop_back();
+                }
+                else if(choice == 10){
+                    break;   
+                }
+            }
+            return result;
+    }
+    else{
+        std::string result, result_masked;
+        while(1){
+                clear();
+                printw("%s%s", prompt_text.c_str(),result_masked.c_str());
+                refresh(); // Print the prompt
+                auto choice = getch();
+                if (IS_CHAR(choice, extra_chars)){
+                    result.push_back(choice);
+                    result_masked.push_back('*');
+                }
+                else if (choice == 127) {
+                    result.pop_back();
+                    result_masked.pop_back();
+                }
+                else if(choice == 10){
+                    break;   
+                }
+            }
+            
+            return result;
+    }
+
+}
+
 namespace RaviBank{
-    // class Bank{
-        // public:
-        class AccountHolder;
-        class BankAccountManager;
-        int account_id = 0;
-        std::string manager_username = "RaviArora", manager_pwd = "ThisIsRavisBank";
-        std::vector<AccountHolder*> holders;
+    class Bank{
+        private:
+            class AccountHolder;
+            class BankAccountManager;
+            class Account;
+            enum class TransactionType {
+                DEPOSIT,
+                WITHDRAW, 
+                TRANSFER
+            };
 
-        enum class TransactionType {
-            DEPOSIT,
-            WITHDRAW, 
-            TRANSFER
-        };
+            int account_id = 0;
+            
+            std::string manager_username = "RaviArora", manager_pwd = "ThisIsRavisBank";
+            std::vector<AccountHolder*> holders;
+            std::vector<Account*> accounts;
+        public:
+            /*TODO - Remove dependance on manager_username and manager_password*/
+            Bank(std::string _manager_username, std::string _manager_pwd):
+                manager_username(_manager_username),
+                manager_pwd(_manager_pwd),
+                bank_manager(manager_username, manager_pwd)
+            {
+            }
+            ;
+
+            /* Account holder functions*/
+            bool registerHolder(std::string name, std::string username, std::string pwd);
+            bool loginHolder(std::string username, std::string pwd);
+            bool loginHolder(int id, std::string pwd);
+            bool createAccount(int type);
+            
+            /*Account manager functions*/
+            bool loginManager(std::string username, std::string pwd);
+
+            /*Account functions*/
+            bool deposit(int account_no, double amount);
+            bool withdraw(int account_no, double amount);
+            bool transfer(int account_no, double amount, int receiver_account_no);
 
 
+
+
+            void logout();
+
+            
+            
+
+        private:
+            bool managerLoggedIn = false;
+            AccountHolder* loggedInSession = nullptr;
+            
+            
+            AccountHolder* getAccountHolder(std::string username);
+            AccountHolder* getAccountHolder(int account_id);
+            
         class BankAccountManager{
             public:
-                static BankAccountManager *get_instance(){
-                    if (manager == nullptr)
-                    {
-                        manager = new BankAccountManager();
-                    }
-                    return manager;
-                };
-            private:
-                BankAccountManager();
+                BankAccountManager(std::string _username, std::string _pwd):
+                    username(_username),
+                    pwd(_pwd){
+                    };
                 std::string username;
                 std::string pwd;
-                static BankAccountManager* manager;
+            private:
+                
+                
+                // static BankAccountManager* manager;
         };
+        BankAccountManager bank_manager;
         class Account{
             public:
                 Account(int account_no, double balance)
@@ -42,6 +177,9 @@ namespace RaviBank{
                     this->balance = balance;
                     this->open_time = GET_TIME_MS;
                 };
+
+                
+
                 int get_account_no();
                 double get_balance();
                 bool deposit(double amount);
@@ -57,42 +195,7 @@ namespace RaviBank{
                 
         };
 
-        int Account::get_account_no(){
-            return this->account_no;
-        };
-
-        double Account::get_balance(){
-            return this->balance;
-        }
-
-        bool Account::deposit(double amount){
-            this->balance+=amount;
-            transaction_history.push_back({TransactionType::DEPOSIT,{amount, GET_TIME_MS}});
-            return true;
-        }
-
-        bool Account::transfer(double amount, Account& transfer_account){
-            if(amount <= balance){
-                this->balance-=amount;
-                transaction_history.push_back({TransactionType::TRANSFER,{amount, GET_TIME_MS}});
-                transfer_account.deposit(amount);
-                return true;
-            }
-            else{
-                return false;
-            }
-        }
-
-        bool Account::withdraw(double amount){
-            if(amount <= balance){
-                this->balance-=amount;
-                transaction_history.push_back({TransactionType::WITHDRAW,{amount, GET_TIME_MS}});
-                return true;
-            }
-            else{
-                return false;
-            }
-        }
+        
 
 
 
@@ -103,40 +206,27 @@ namespace RaviBank{
                 id(_id),
                 username(_username),
                 pwd(_pwd){};
-                std::vector<Account*> getAccounts();
+
+                /*Members*/
+                std::string name, username;
+                std::string pwd;int id;
+
+                /*SECTION - Methods*/
+                
                 Account* createAccount(int account_no);
                 Account* createAccount(int account_no, double balance);
+
+                Account* getAccount(int account_no);
+                std::vector<Account*> getAccounts();
+                
+
                 bool changePassword(std::string old_pwd, std::string new_pwd);
+                
             private:
-                int id;
-                std::string name, username;
-                std::string pwd;
                 std::vector<Account*> accounts;
         };
 
-        Account* AccountHolder::createAccount(int account_no){
-            Account* new_account = new Account(account_no, 0);
-            accounts.push_back(new_account);
-            return new_account;
-        }
-        Account* AccountHolder::createAccount(int account_no, double balance){
-            Account* new_account = new Account(account_no, balance);
-            accounts.push_back(new_account);
-            return new_account;
-        }
-        std::vector<Account*> AccountHolder::getAccounts(){
-            return accounts;
-        }
-        bool AccountHolder::changePassword(std::string old_pwd, std::string new_pwd){
-            if(old_pwd == pwd){
-                pwd = new_pwd;
-                return true;
-            }
-            else{
-                return false;
-            }
-
-        }
+        
 
         AccountHolder* getAccount(std::string username){
             for(auto it:holders){
@@ -146,14 +236,11 @@ namespace RaviBank{
             }
         }
         
-        AccountHolder* registerAccount(std::string name, std::string username, std::string pwd){
-            AccountHolder* new_account = new AccountHolder(account_id++, name, username, pwd);
-            holders.push_back(new_account);
-        }
+        // AccountHolder* registerAccount(std::string name, std::string username, std::string pwd){
+        //     AccountHolder* new_account = new AccountHolder(account_id++, name, username, pwd);
+        //     holders.push_back(new_account);
+        // }
 
-        AccountHolder* loginAccount(std::string username, std::string pwd){
-
-        }
 
     // }    
 
@@ -176,9 +263,193 @@ namespace RaviBank{
     //         std::vector<AccountHolder*> holders;
 
 
-    // };
+    };
+
+    
+    Bank::Account* Bank::AccountHolder::createAccount(int account_no){
+            Account* new_account = new Account(account_no, 0);
+            accounts.push_back(new_account);
+            return new_account;
+        }
+        Bank::Account* Bank::AccountHolder::createAccount(int account_no, double balance){
+            Account* new_account = new Account(account_no, balance);
+            accounts.push_back(new_account);
+            return new_account;
+        }
+        Bank::Account* Bank::AccountHolder::getAccount(int account_no){
+            for(auto it:this->accounts){
+                if(it->get_account_no() == account_no){
+                    return it;
+                }
+            }
+            return nullptr;
+        }
+        std::vector<Bank::Account*> Bank::AccountHolder::getAccounts(){
+            return accounts;
+        }
+
+
+        bool Bank::AccountHolder::changePassword(std::string old_pwd, std::string new_pwd){
+            if(old_pwd == pwd){
+                pwd = new_pwd;
+                return true;
+            }
+            else{
+                return false;
+            }
+
+        }
+
+        int Bank::Account::get_account_no(){
+            return this->account_no;
+        };
+
+        double Bank::Account::get_balance(){
+            return this->balance;
+        }
+
+        bool Bank::Account::deposit(double amount){
+            this->balance+=amount;
+            transaction_history.push_back({TransactionType::DEPOSIT,{amount, GET_TIME_MS}});
+            return true;
+        }
+
+        bool Bank::Account::transfer(double amount, Account& transfer_account){
+            if(amount <= balance){
+                this->balance-=amount;
+                transaction_history.push_back({TransactionType::TRANSFER,{amount, GET_TIME_MS}});
+                transfer_account.deposit(amount);
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+
+        bool Bank::Account::withdraw(double amount){
+            if(amount <= balance){
+                this->balance-=amount;
+                transaction_history.push_back({TransactionType::WITHDRAW,{amount, GET_TIME_MS}});
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        Bank::AccountHolder* Bank::getAccountHolder(std::string username){
+            for(auto it:holders){
+                if(username == it->username){
+                    return it;
+                }
+            }
+            return nullptr;
+        }
+        Bank::AccountHolder* Bank::getAccountHolder(int id){
+            for(auto it:holders){
+                if(id == it->id){
+                    return it;
+                }
+            }
+            return nullptr;
+        }
+
+        bool Bank::registerHolder(std::string name, std::string username, std::string pwd){
+            if(getAccountHolder(username) == nullptr){
+                auto new_holder = new Bank::AccountHolder(account_id++, name, username, pwd);
+                holders.push_back(new_holder);
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        bool Bank::loginHolder(std::string username, std::string pwd){
+            if(getAccountHolder(username) != nullptr){
+                if(getAccountHolder(username)->pwd == pwd){
+                    loggedInSession = getAccountHolder(username);
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }
+            return false;
+        }
+        bool Bank::loginHolder(int id, std::string pwd){
+            if(getAccountHolder(id) != nullptr){
+                if(getAccountHolder(id)->pwd == pwd){
+                    loggedInSession = getAccountHolder(id);
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        bool Bank::createAccount(int type){
+            assert(loggedInSession != nullptr);
+            if(type){
+                accounts.push_back(loggedInSession->createAccount(account_id++));
+                return true;
+            }
+            else{
+                return false;
+            }
+
+        }
+
+        bool Bank::loginManager(std::string username, std::string pwd){
+            if(bank_manager.username == username && bank_manager.pwd == pwd){
+                managerLoggedIn = true;
+                return true;
+            }
+            return false;
+        }
+
+        bool Bank::deposit(int account_no, double amount){
+            assert(loggedInSession != nullptr);
+            Account* account = loggedInSession->getAccount(account_no);
+            if(account != nullptr){
+                account->deposit(amount);
+                return true;
+            }
+            else{
+                return false;
+            }
+
+        }
+        bool Bank::withdraw(int account_no, double amount){
+            assert(loggedInSession != nullptr);
+            Account* account = loggedInSession->getAccount(account_no);
+            if(account != nullptr){
+                return account->withdraw(amount);
+            }
+            else{
+                return false;
+            }
+        }
+
+        bool Bank::transfer(int account_no, double amount, int receiver_account_no){
+            assert(loggedInSession != nullptr);
+            Account* account = loggedInSession->getAccount(account_no);
+            if(account != nullptr){
+                return account->withdraw(amount);
+            }
+            else{
+                return false;
+            }
+        }
+
+        void Bank::logout(){
+            managerLoggedIn = false;
+            loggedInSession = nullptr;
+        }
+
 
 }
+
 
 
 
@@ -186,15 +457,22 @@ namespace RaviBank{
 void cli_client(){
     int mode=0;
     
-    RaviBank::AccountHolder* loggedInHolder = nullptr;
-
+    // RaviBank::AccountHolder* loggedInHolder = nullptr;
+    RaviBank::Bank bank("RaviArora", "password");
     initscr();
     noecho();
     cbreak();
+    ncurses_menu({"Hey", "Hello", "This"});
 
-    int yMax, xMax;
-    getmaxyx(stdscr, yMax, xMax);
-    if(mode == 0){
+    while(1){
+        if (mode == 0){
+            mode = 1 + ncurses_menu({"Login as Customer", "Login as Bank Manager", "Register as New Customer", "Quit"});
+        }
+        else if (mode == 1){
+
+        }
+    }
+    /* if(mode == 0){
             WINDOW *menuwin = newwin(6, xMax-12, yMax-8, 4);
             box(menuwin, 0, 0);
             refresh();
@@ -315,13 +593,21 @@ void cli_client(){
             // }
             // getch();
             // endwin();
-        }
+        } */
 }
 
 int main() {
     // printf("%d", -1%4);
     
-    cli_client();
+    // cli_client();
+    initscr();
+    noecho();
+    cbreak();
+    // std::cout << ncurses_input_string("Enter text: ", false, std::string("_ "));
+    
+    getch();
+    endwin();
+    
     // uint64_t ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     // std::cout << ms << " milliseconds since the Epoch\n";
 }
