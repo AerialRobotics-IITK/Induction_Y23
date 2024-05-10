@@ -1,9 +1,22 @@
 #include <chrono>
 #include <cstdio>
 #include <iostream>
+#include <stdexcept>
 #include <string>
+#include <vector>
 
 using namespace std;
+
+class BankAccount;
+class BankAccountHolder;
+
+const float SAVINGS_MIN = 100;
+const float SAVINGS_TRANS_MAX = 10000;
+
+int account_no_count = 0;
+vector<BankAccount *> bank_accounts;
+BankAccount *curr_account;
+BankAccountHolder *curr_holder;
 
 struct Date {
   int year;
@@ -27,35 +40,53 @@ Date get_current_date() {
 }
 
 class BankAccount {
+private:
+  BankAccount *get_account(int acc_no) { return bank_accounts[acc_no - 1]; }
+
 public:
   int acc_no;
+  int type;
   float balance;
   Date open_date;
   void withdraw(float amount) {
     if (amount <= balance) {
-      printf("Ammount %f has been withdrawn\n", amount);
       balance -= amount;
     } else {
-      cout << "Not possible not enough balance" << endl;
+      invalid_argument("Not possible not enough balance");
     }
   };
-  void deposit(float amount) {
-    printf("Ammount %f has been deposited\n", amount);
-    balance += amount;
+  void deposit(float amount) { balance += amount; };
+  void transfer(float amount, int acc_no) {
+    BankAccount *to_acc = get_account(acc_no);
+    if (amount <= balance) {
+      balance -= amount;
+      to_acc->balance += amount;
+    } else {
+      invalid_argument("Not possible not enough balance");
+    }
   };
-  void transfer(float amount, int acc_no){};
 };
 
-class SavingsAccount : private BankAccount {
-public:
+class SavingsAccount : public BankAccount {
+private:
   float interest_rate;
   float getInterestRate() { return interest_rate; }
-  void setInterestRate(float rate) { interest_rate = rate; }
+
+public:
+  void setInterestRate(float rate) {
+    if (interest_rate <= 6)
+      interest_rate = rate;
+    else
+      invalid_argument("Interest rate cannot be higher than 6%");
+  }
 };
 
-class CheckingAccount : private BankAccount {
-public:
+class CheckingAccount : public BankAccount {
+private:
   float interest_rate;
+
+public:
+  void setInterestRate(float interest) { interest_rate = interest; }
 };
 
 class BankAccountHolder {
@@ -63,12 +94,46 @@ public:
   string Name;
   string Username;
   string passwd;
+  vector<BankAccount> bankaccounts;
+  void changepasswd(string pass) { passwd = pass; }
+  vector<BankAccount> get_accounts() { return bankaccounts; }
+
+private:
+  void createAccount(int type, float start_amount, float interest) {
+    switch (type) {
+    case 1:
+      if (start_amount < SAVINGS_MIN) {
+        invalid_argument("Opening Savings Account requires at least 100");
+      }
+      SavingsAccount saving_acc;
+      saving_acc.acc_no = account_no_count + 1;
+      saving_acc.type = 1;
+      saving_acc.balance = start_amount;
+      saving_acc.open_date = get_current_date();
+      saving_acc.setInterestRate(interest);
+      bankaccounts.push_back(saving_acc);
+      bank_accounts.push_back(&saving_acc);
+      break;
+    case 2:
+      CheckingAccount check_acc;
+      check_acc.acc_no = account_no_count + 1;
+      saving_acc.type = 2;
+      check_acc.balance = start_amount;
+      check_acc.open_date = get_current_date();
+      check_acc.setInterestRate(interest);
+      bankaccounts.push_back(check_acc);
+      bank_accounts.push_back(&check_acc);
+      break;
+    }
+    account_no_count++;
+  }
 };
 
 class BranchManager {
 public:
   string username;
   string passwd;
+  vector<BankAccount *> get_accounts() { return bank_accounts; }
 };
 
 int get_option_bw(int a, int b) {
@@ -91,7 +156,10 @@ int who_you() {
 
 int main() {
   int user_type = who_you();
-  if (user_type == 1) {
-  } else {
+  switch (user_type) {
+  case 1:
+    break;
+  case 2:
+    break;
   }
 }
