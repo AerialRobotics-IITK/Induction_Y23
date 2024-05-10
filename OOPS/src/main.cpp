@@ -65,7 +65,8 @@ std::string ncurses_input_string(std::string prompt_text, bool masked = false, s
                     result.push_back(choice);
                 }
                 else if (choice == 127) {
-                    result.pop_back();
+                    if(result.size())
+                        result.pop_back();
                 }
                 else if(choice == 10){
                     break;   
@@ -98,6 +99,13 @@ std::string ncurses_input_string(std::string prompt_text, bool masked = false, s
 
 }
 
+void ncurses_flash(std::string message){
+    clear();
+    printw(message.c_str());
+    refresh();
+    getch();
+}
+
 namespace RaviBank{
     class Bank{
         private:
@@ -120,10 +128,7 @@ namespace RaviBank{
             Bank(std::string _manager_username, std::string _manager_pwd):
                 manager_username(_manager_username),
                 manager_pwd(_manager_pwd),
-                bank_manager(manager_username, manager_pwd)
-            {
-            }
-            ;
+                bank_manager(manager_username, manager_pwd){};
 
             /* Account holder functions*/
             bool registerHolder(std::string name, std::string username, std::string pwd);
@@ -193,6 +198,10 @@ namespace RaviBank{
                 uint64_t open_time;
                 std::vector<std::pair<TransactionType, std::pair<double, uint64_t>>> transaction_history;
                 
+        };
+        class SavingsAccount : public Account {
+            public:
+                double interest_rate;
         };
 
         
@@ -462,14 +471,54 @@ void cli_client(){
     initscr();
     noecho();
     cbreak();
-    ncurses_menu({"Hey", "Hello", "This"});
 
     while(1){
         if (mode == 0){
-            mode = 1 + ncurses_menu({"Login as Customer", "Login as Bank Manager", "Register as New Customer", "Quit"});
+            mode = 1 + ncurses_menu({"Login as Customer", "Register as New Customer", "Login as Bank Manager", "Quit"});
+            printf("Done");
+            // break;
         }
         else if (mode == 1){
+            std::string username = ncurses_input_string("Username: ");
+            std::string password = ncurses_input_string("Password: ");
+            if (bank.loginHolder(username, password)){
+                ncurses_flash("Login Successful");
+                mode = 7;
+            }
+            else{
+                ncurses_flash("Incorrect username or password");
+            }
 
+        }
+        else if (mode == 2){
+            std::string name = ncurses_input_string("Name: ", false, " '");
+            if (name == ""){
+                ncurses_flash("Empty name not allowed");
+            }
+            std::string username = ncurses_input_string("Username: ");
+            std::string password = ncurses_input_string("Password: ", true, " #!");
+            std::string confirm_password = ncurses_input_string("Confirm Password: ", true, " #!");
+            if (confirm_password == password){
+                mode = 0;
+                bank.registerHolder(name, username, password);
+                ncurses_flash("Registered succsefully! Proceed to login");
+            }
+        }
+        else if (mode == 7){
+            int choice = ncurses_menu({"Go to Acccounts", "Create Another Account","Change Password", "Logout"});
+            if(choice == 1){
+                int type = ncurses_menu({"Savings", "Current", "Cancel"});
+                switch (type){
+                    case 0:
+                        bank.createAccount(0);
+                        break;
+                    case 1:
+                        bank.createAccount(1);
+                        break;
+                    case 2:
+                        break;
+                }
+            }
         }
     }
     /* if(mode == 0){
@@ -604,8 +653,7 @@ int main() {
     noecho();
     cbreak();
     // std::cout << ncurses_input_string("Enter text: ", false, std::string("_ "));
-    
-    getch();
+    cli_client();
     endwin();
     
     // uint64_t ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
