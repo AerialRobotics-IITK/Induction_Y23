@@ -9,10 +9,10 @@
 
 using namespace std;
 
-vector<string> UsernamesInUses;
+vector<string> UsernamesInUses;               // Just a list of existing usernames and passwords and names.
 vector<string> Names;
 vector<string> Passwords;
-double accountNumber = 100000000;
+double accountNumber = 100000000;            // I have started alloting the accnum in the order they are created, irrespective of the user creating it.
 
 class Transaction {
 private:
@@ -20,7 +20,7 @@ private:
     double amount;
 
 public:
-    Transaction(const string& desc, double amt) : description(desc), amount(amt) {}
+    Transaction(const string& desc, double& amt) : description(desc), amount(amt) {}
 
     string getDescription() const { 
         return description; 
@@ -109,7 +109,7 @@ int main (){
                 Names.push_back(NAME);
                 cout << "Enter your password: "; cin >> PASS;
                 Passwords.push_back(PASS);
-                User userObject(USERNAME);
+                // User userObject(USERNAME);
                 main();
             }
             
@@ -156,11 +156,11 @@ int main (){
                         cout << "For a checking/current account, press 2" << endl;
                         cout << "Press your choice: "; cin >> response;
                         if(response == 1){
-                            Account userAccount(accountNumber++, "Savings");
+                            // Account userAccount(accountNumber++, "Savings");
                             
                         }
                         if(response == 2){
-                            Account userAccount(accountNumber++, "Checking/Current");
+                            // Account userAccount(accountNumber++, "Checking/Current");
                                                 
                         }                        
                         else{
