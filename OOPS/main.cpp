@@ -28,7 +28,7 @@ const float SAVINGS_MIN = 100;
 const float SAVINGS_TRANS_MAX = 10000;
 
 int account_no_count = 0;
-map<int, BankAccount *> bank_accounts;
+map<int, BankAccount> bank_accounts;
 map<string, BankAccountHolder> account_holders;
 vector<Transaction> transactions;
 
@@ -43,8 +43,6 @@ void press_enter_to_continue() {
   cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
   cin.get();
 }
-
-BankAccount *get_account(int acc_no) { return bank_accounts[acc_no - 1]; }
 
 Date get_current_date() {
   time_t currentTime = time(nullptr);
@@ -75,7 +73,7 @@ public:
   };
   void deposit(float amount) { balance += amount; };
   void transfer(float amount, int acc_no) {
-    BankAccount *to_acc = get_account(acc_no);
+    BankAccount *to_acc = &bank_accounts[acc_no];
     if (amount <= balance) {
       balance -= amount;
       to_acc->balance += amount;
@@ -86,7 +84,7 @@ public:
 };
 
 class SavingsAccount : public BankAccount {
-private:
+public:
   float interest_rate;
   float getInterestRate() { return interest_rate; }
 
@@ -100,7 +98,7 @@ public:
 };
 
 class CheckingAccount : public BankAccount {
-private:
+public:
   float interest_rate;
 
 public:
@@ -112,9 +110,9 @@ public:
   string Name;
   string Username;
   string passwd;
-  map<int, BankAccount> bankaccounts;
+  vector<int> bankaccounts;
   void changepasswd(string pass) { passwd = pass; }
-  map<int, BankAccount> get_accounts() { return bankaccounts; }
+  vector<int> get_accounts() { return bankaccounts; }
 
 public:
   int createAccount(int type, float start_amount, float interest) {
@@ -131,8 +129,8 @@ public:
         saving_acc.balance = start_amount;
         saving_acc.open_date = get_current_date();
         saving_acc.setInterestRate(interest);
-        bankaccounts[saving_acc.acc_no] = saving_acc;
-        bank_accounts[saving_acc.acc_no] = &saving_acc;
+        bankaccounts.push_back(saving_acc.acc_no);
+        bank_accounts[saving_acc.acc_no] = saving_acc;
         break;
       case 2:
         CheckingAccount check_acc;
@@ -141,15 +139,15 @@ public:
         check_acc.balance = start_amount;
         check_acc.open_date = get_current_date();
         check_acc.setInterestRate(interest);
-        bankaccounts[check_acc.acc_no] = check_acc;
-        bank_accounts[check_acc.acc_no] = &check_acc;
+        bankaccounts.push_back(check_acc.acc_no);
+        bank_accounts[check_acc.acc_no] = check_acc;
         break;
       }
-      account_no_count++;
     } catch (...) {
       cout << "Cannot create Account" << endl;
       press_enter_to_continue();
     }
+    account_no_count++;
     return account_no_count;
   }
 };
@@ -225,19 +223,48 @@ void create_account() {
     float interest;
     cin >> interest;
     int acc_no = curr_holder->createAccount(opt, start_bal, interest);
-    cout << "Account Created with acc. no" << acc_no << endl;
+    cout << "Account Created with acc. no: " << acc_no << endl;
     press_enter_to_continue();
   } catch (...) {
     throw invalid_argument("");
   }
 }
-void select_acc() {
+void select_account() {
+  int acc_no;
   try {
-    int acc_no;
     cout << "Enter Account no: ";
     cin >> acc_no;
-    curr_account = bank_accounts[acc_no];
-    printf("Account with acc.no %d selected\n", acc_no);
+    curr_account = &bank_accounts[acc_no];
+  } catch (...) {
+    cout << "Cannot Find Bank account" << endl;
+    press_enter_to_continue();
+  }
+}
+void transfer_money() {
+  int ben_acc_no;
+  float amount;
+  try {
+    cout << "Enter Account no(Beneficiary): ";
+    cin >> ben_acc_no;
+    cout << "Enter Amount to be tranferred: ";
+    cin >> amount;
+  } catch (...) {
+    cout << "Cannot Find Bank account" << endl;
+    press_enter_to_continue();
+  }
+  try {
+    curr_account->transfer(amount, ben_acc_no);
+  } catch (...) {
+    cout << "Cannot transfer amount" << endl;
+    press_enter_to_continue();
+  }
+}
+void view_balance() {
+  int acc_no;
+  try {
+    /* cout << "Account balance is: " << curr_account->balance << endl; */
+    printf("Account Balance is: %f\n", curr_account->balance);
+    press_enter_to_continue();
   } catch (...) {
     cout << "Cannot Find Bank account" << endl;
   }
@@ -274,9 +301,10 @@ void login_acc_holder() {
   clrsrc();
   cout << "What Operation You want to perform" << endl
        << "1. Create Account" << endl
-       << "2. Select Account" << endl
-       << "3. View Statements" << endl
-       << "4. Delete Account" << endl;
+       << "2. Transfer Amount" << endl
+       << "3. View Balance" << endl
+       << "4. View Statements" << endl
+       << "5. Delete Account" << endl;
   int opt = get_option_bw(1, 4);
   switch (opt) {
   case 1:
@@ -286,9 +314,14 @@ void login_acc_holder() {
       cout << "Cannot create account" << endl;
       press_enter_to_continue();
     }
+    break;
   case 2:
-    select_acc();
+    select_account();
+    transfer_money();
+    break;
   case 3:
+    select_account();
+    view_balance();
     break;
   case 4:
     break;
