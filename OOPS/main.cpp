@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <chrono>
 #include <cstdio>
 #include <iostream>
@@ -262,12 +263,25 @@ void transfer_money() {
 void view_balance() {
   int acc_no;
   try {
-    /* cout << "Account balance is: " << curr_account->balance << endl; */
     printf("Account Balance is: %f\n", curr_account->balance);
     press_enter_to_continue();
   } catch (...) {
     cout << "Cannot Find Bank account" << endl;
   }
+}
+void delete_account() {
+  try {
+    int acc_no = curr_account->acc_no;
+    curr_holder->bankaccounts.erase(
+        std::remove(curr_holder->bankaccounts.begin(),
+                    curr_holder->bankaccounts.end(), acc_no),
+        curr_holder->bankaccounts.end());
+    bank_accounts.erase(acc_no);
+    cout << "Account Deleted" << endl;
+  } catch (...) {
+    cout << "No such Account" << endl;
+  }
+  press_enter_to_continue();
 }
 
 void login_acc_holder() {
@@ -305,7 +319,7 @@ void login_acc_holder() {
        << "3. View Balance" << endl
        << "4. View Statements" << endl
        << "5. Delete Account" << endl;
-  int opt = get_option_bw(1, 4);
+  int opt = get_option_bw(1, 5);
   switch (opt) {
   case 1:
     try {
@@ -324,6 +338,11 @@ void login_acc_holder() {
     view_balance();
     break;
   case 4:
+    select_account();
+    break;
+  case 5:
+    select_account();
+    delete_account();
     break;
   }
 }
