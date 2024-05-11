@@ -1,6 +1,8 @@
 FOR BRANCH MANAGER LOGIN USE 
 ID - admin
 password - admin123
+
+
 Bank Management System
 This repository contains a simple Bank Management System implemented in C++. The system allows users to sign up, create bank accounts, deposit and withdraw funds, view account statements, and provides a branch manager interface for administrative tasks.
 Components
