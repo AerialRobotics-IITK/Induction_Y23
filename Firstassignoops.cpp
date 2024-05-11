@@ -3,56 +3,29 @@
 #include<string>
 using namespace std ; 
 
+
+
+
+    // get the current time 
+const auto now = std::chrono::system_clock::now();      
+// transform the time into a duration since the epoch 
+const auto epoch   = now.time_since_epoch();      
+// cast the duration into seconds 
+int seconds = std::chrono::duration_cast<std::chrono::seconds>(epoch);
+
+
+
 int balancecap= 10000000;
 
-list<Bankaccntholder> accounts;
-
-
-class Bankaccntholder{
-    public:
-    void changepassword();
-    void getaccount() ;
-    BankAccount* accountDetails;
-    string password;
-    string username;
-    string name ;
-    void get(string pass , string user);
-    string setpass();
-    string setuser();
-   list<BankAccount> ownaccounts;
-   void setAccountDetails(BankAccount* account) ;
-    private:
-    string username;
-    string Netbankingpass;
-    
-
-    
-};
- 
- void changepassword(){
-    string username , password ; 
-    cout <<"what is your username ?"<<endl;
-    cin>>username;
-    cout<<"what do you want to change the password to ?"<<endl;
-    cin>>password;
-    get (password,username);
- }
-
-  void Bankaccntholder::setAccountDetails(BankAccount* account) {
-    accountDetails = account;
-  }
-
-//list<BankAccount> Bankaccntholder::ownaccounts(){
- //      return  ownaccounts;
-//}
 
 class BankAccount {
     public:
+    int transfer();
     int deposit();
     int withdraw();
+    int getBalance();
     int Accountnumber; 
     int opendate;
-    int getBalance();
     protected:
     int balance;
      list<string> transaction;
@@ -73,18 +46,20 @@ int BankAccount::withdraw(){
 int BankAccount::getBalance(){
     return balance;
 }
+
 class Savingaccount : BankAccount {
     int interestrate;
 public:
-    string response; 
+    bool isopen;
     int getInterestRate();
     Savingaccount();
-    void closeSavingaccount(); // Moved inside the class
+    void closeSavingaccount(); 
     void setInterestRate(int rate);
-    bool isopen;
+    
 };
 
-void closeSavingaccount( ){
+void Savingaccount::closeSavingaccount( ){
+    string response;
     std::cout<<"Do you want to close this bank account. Reply in Y/N"<<endl;
     std::cin >> response ; 
     if (response=="Y"){
@@ -93,7 +68,13 @@ void closeSavingaccount( ){
 }
 
 int Savingaccount::getInterestRate(){
+    interestrate = 0.0000000000001*balance + 0.006*(seconds/(3600*24)) ;
+    if (interestrate<6){
     return interestrate;
+}
+    else {
+        return 6;
+    }
 }
 
 Savingaccount::Savingaccount(){
@@ -107,14 +88,14 @@ void Savingaccount::setInterestRate(int rate){
 class Currentaccount:BankAccount{
     int interestrate;
     public:
-     void closeCurrentaccount(); // Moved inside the class
-     bool isopen;
-     string response;
+    bool isopen;
+    void closeCurrentaccount(); 
     int getInterestRate();
     Currentaccount();
 };
 
-void closeCurrentaccount( ){
+void Currentaccount::closeCurrentaccount( ){
+    string response ;
     std::cout<<"Do you want to close this bank account. Reply in Y/N"<<endl;
     std::cin >> response ; 
     if (response=="Y"){
@@ -131,50 +112,64 @@ Currentaccount::Currentaccount(){
     std::cout<<"New Currentaccount account created."<<endl;
 } 
 
-class BranchManager{
-    static BranchManager * Instance;
-    BranchManager();
 
+
+class Bankaccntholder{
     public:
-        void fastforward(int days);
-        static BranchManager* getBM();
-        void getAccountHolders();
-        void getStatementofAccount();
-        
+    void get(string pass , string user);
+    void changepassword();
+    void createaccount() ;
+    void setAccountDetails(BankAccount* accnt) ;
+    int getAccountNumber();
+    list<BankAccount> ownaccounts();
+    BankAccount* accountDetails;
+    string password;
+    string username;
+    string name ;
+    string setpass();
+    string setuser();
+   
+   
+    private:
+    list<BankAccount> ownaccounts;
+    string username;
+    string Netbankingpass;
+    
+
+    
 };
 
-BranchManager *Branchmanager::Instance=nullptr;
+ list<Bankaccntholder> accounts;
 
-BranchManager::BranchManager(){
-    std::cout<<"New BranchManager account created."<<endl;
-}
-
-BranchManager*BranchManager::getBM()
-{
-    if (Instance== nullptr){
-        Instance=new BranchManager();
+ int Bankaccntholder::getAccountNumber() const {
+    if (accountDetails) {
+        return accountDetails->Accountnumber;
     }
-    return Instance;
+    return -1; // Indicate no account associated
 }
 
-void BranchManager::getAccountHolders(){
-    std::cout << "Bank Accounts:" << endl;
-for (const auto& account : accounts) {
-     std::cout << "Account Number: " << account.Accountnumber << endl;
-
+ void Bankaccntholder::changepassword(){
+    string username , password ; 
+    cout <<"what is your username ?"<<endl;
+    cin>>username;
+    cout<<"what do you want to change the password to ?"<<endl;
+    cin>>password;
+      for (auto& account : accounts) {
+        if (account.username == username) {
+            account.password = password;
+            break; 
+        }
+    }
 }
+ 
+
+  void Bankaccntholder::setAccountDetails(BankAccount* accnt) {
+    accountDetails = accnt;
+  }
+
+list<BankAccount> Bankaccntholder::ownaccounts(){
+    return ownaccounts;
 }
-
-void BranchManager::getStatementofAccount(){
-    std::cout << "Bank Accounts:" << endl;
-for (const auto& account : accounts) {
-     std::cout << "Bank Statement: " << account.getbalance() << endl;
-
-}
-
-}
-
-
 
 void Bankaccntholder::get(string pass,string user){
         password = pass; 
@@ -272,11 +267,66 @@ void Bankaccntholder::createaccount(){
       std::cin>>reply;
       if (reply=="savings account"){
           Savingaccount SA ;
-          BAH.ownaccounts().push_back(BAH);
+          BAH.ownaccounts().push_back(SA);
       }
 
       else if(reply=="current account"){
           Currentaccount CA ;
-          BAH.ownaccounts().push_back(BAH);
+         BAH.ownaccounts().push_back(CA);
       }
 }
+
+
+
+
+class BranchManager{
+    static BranchManager * Instance;
+    BranchManager();
+
+    public:
+        void fastforward(int days);
+        static BranchManager* getBM();
+        void getAccountHolders();
+        void getStatementofAccount();
+        
+};
+
+BranchManager* Branchmanager :: Instance=nullptr;
+
+void BranchManager::fastforward(){
+    int days;
+     cout <<"How many days do you wanna skip"<<endl;
+     cin>>days;
+    seconds=seconds - days*3600;
+}
+
+BranchManager::BranchManager(){
+    std::cout<<"New BranchManager account created."<<endl;
+}
+
+BranchManager*BranchManager::getBM()
+{
+    if (Instance== nullptr){
+        Instance=new BranchManager();
+    }
+    return Instance;
+}
+
+void BranchManager::getAccountHolders(){
+    std::cout << "Bank Accounts:" << endl;
+for (const auto& account : accounts) {
+     std::cout << "Account Number: " << account.getAccountNumber() << endl;
+
+}
+}
+
+void BranchManager::getStatementofAccount(){
+    std::cout << "Bank Accounts:" << endl;
+for (const auto& account : accounts) {
+     std::cout << "Bank Statement: " << account.getbalance() << endl;
+
+}
+
+}
+
+
