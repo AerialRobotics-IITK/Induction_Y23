@@ -527,7 +527,7 @@ void do_transaction(bank_account* account){
         int acc_num;
         cin>>acc_num;
         bank_account* to = find_account(acc_num);
-        if(to) {
+        if(!to) {
             cout<<"\n\nThis Account Does Not Exist!!";
             return;
         }
