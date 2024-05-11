@@ -30,3 +30,6 @@ Compile the code using a C++ compiler.
 Run the executable file.
 Follow the prompts to sign up or log in as a user or branch manager.
 Perform desired operations such as creating accounts, depositing, withdrawing, or viewing statements.
+FOR BRANCH MANAGER LOGIN USE 
+ID - admin
+password - admin123
