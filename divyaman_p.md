@@ -1,6 +1,8 @@
+FOR BRANCH MANAGER LOGIN USE 
+ID - admin
+password - admin123
 Bank Management System
 This repository contains a simple Bank Management System implemented in C++. The system allows users to sign up, create bank accounts, deposit and withdraw funds, view account statements, and provides a branch manager interface for administrative tasks.
-
 Components
 BankAccount Class
 The BankAccount class represents a generic bank account. It has attributes such as accountNumber, balance, openDate, and transactionHistory. This class provides methods to deposit, withdraw funds, and display account statements.
@@ -30,6 +32,3 @@ Compile the code using a C++ compiler.
 Run the executable file.
 Follow the prompts to sign up or log in as a user or branch manager.
 Perform desired operations such as creating accounts, depositing, withdrawing, or viewing statements.
-FOR BRANCH MANAGER LOGIN USE 
-ID - admin
-password - admin123
