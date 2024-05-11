@@ -1,8 +1,10 @@
 #include <chrono>
 #include <cstdio>
 #include <iostream>
+#include <map>
 #include <stdexcept>
 #include <string>
+#include <sys/types.h>
 #include <vector>
 
 using namespace std;
@@ -27,11 +29,22 @@ const float SAVINGS_TRANS_MAX = 10000;
 
 int account_no_count = 0;
 vector<BankAccount *> bank_accounts;
-vector<BankAccountHolder> account_holders;
+map<string, BankAccountHolder> account_holders;
 vector<Transaction> transactions;
 
 BankAccount *curr_account;
 BankAccountHolder *curr_holder;
+
+// Terminal Utils
+void clrsrc() { cout << "\033[2J\033[1;1H"; }
+void press_enter_to_continue() {
+  cout << "(Press Enter to Continue)" << endl;
+  cin.clear();
+  cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+  cin.get();
+}
+
+BankAccount *get_account(int acc_no) { return bank_accounts[acc_no - 1]; }
 
 Date get_current_date() {
   time_t currentTime = time(nullptr);
@@ -48,9 +61,6 @@ Date get_current_date() {
 }
 
 class BankAccount {
-private:
-  BankAccount *get_account(int acc_no) { return bank_accounts[acc_no - 1]; }
-
 public:
   int acc_no;
   int type;
@@ -60,7 +70,7 @@ public:
     if (amount <= balance) {
       balance -= amount;
     } else {
-      invalid_argument("Not possible not enough balance");
+      throw invalid_argument("Not possible not enough balance");
     }
   };
   void deposit(float amount) { balance += amount; };
@@ -70,7 +80,7 @@ public:
       balance -= amount;
       to_acc->balance += amount;
     } else {
-      invalid_argument("Not possible not enough balance");
+      throw invalid_argument("Not possible not enough balance");
     }
   };
 };
@@ -85,7 +95,7 @@ public:
     if (interest_rate <= 6)
       interest_rate = rate;
     else
-      invalid_argument("Interest rate cannot be higher than 6%");
+      throw invalid_argument("Interest rate cannot be higher than 6%");
   }
 };
 
@@ -102,38 +112,44 @@ public:
   string Name;
   string Username;
   string passwd;
-  vector<BankAccount> bankaccounts;
+  map<int, BankAccount> bankaccounts;
   void changepasswd(string pass) { passwd = pass; }
-  vector<BankAccount> get_accounts() { return bankaccounts; }
+  map<int, BankAccount> get_accounts() { return bankaccounts; }
 
-private:
+public:
   void createAccount(int type, float start_amount, float interest) {
-    switch (type) {
-    case 1:
-      if (start_amount < SAVINGS_MIN) {
-        invalid_argument("Opening Savings Account requires at least 100");
+    try {
+      switch (type) {
+      case 1:
+        if (start_amount < SAVINGS_MIN) {
+          throw invalid_argument(
+              "Opening Savings Account requires at least 100");
+        }
+        SavingsAccount saving_acc;
+        saving_acc.acc_no = account_no_count + 1;
+        saving_acc.type = 1;
+        saving_acc.balance = start_amount;
+        saving_acc.open_date = get_current_date();
+        saving_acc.setInterestRate(interest);
+        bankaccounts[saving_acc.acc_no] = saving_acc;
+        bank_accounts.push_back(&saving_acc);
+        break;
+      case 2:
+        CheckingAccount check_acc;
+        check_acc.acc_no = account_no_count + 1;
+        check_acc.type = 2;
+        check_acc.balance = start_amount;
+        check_acc.open_date = get_current_date();
+        check_acc.setInterestRate(interest);
+        bankaccounts[check_acc.acc_no] = check_acc;
+        bank_accounts.push_back(&check_acc);
+        break;
       }
-      SavingsAccount saving_acc;
-      saving_acc.acc_no = account_no_count + 1;
-      saving_acc.type = 1;
-      saving_acc.balance = start_amount;
-      saving_acc.open_date = get_current_date();
-      saving_acc.setInterestRate(interest);
-      bankaccounts.push_back(saving_acc);
-      bank_accounts.push_back(&saving_acc);
-      break;
-    case 2:
-      CheckingAccount check_acc;
-      check_acc.acc_no = account_no_count + 1;
-      saving_acc.type = 2;
-      check_acc.balance = start_amount;
-      check_acc.open_date = get_current_date();
-      check_acc.setInterestRate(interest);
-      bankaccounts.push_back(check_acc);
-      bank_accounts.push_back(&check_acc);
-      break;
+      account_no_count++;
+    } catch (...) {
+      cout << "Cannot create Account" << endl;
+      press_enter_to_continue();
     }
-    account_no_count++;
   }
 };
 
@@ -141,7 +157,9 @@ class BranchManager {
 public:
   string username;
   string passwd;
-  vector<BankAccountHolder> get_account_holders() { return account_holders; }
+  map<string, BankAccountHolder> get_account_holders() {
+    return account_holders;
+  }
 };
 
 int get_option_bw(int a, int b) {
@@ -156,6 +174,7 @@ int get_option_bw(int a, int b) {
 }
 
 int who_you() {
+  clrsrc();
   cout << "Who are you (Enter the number to select)" << endl;
   cout << "1. Bank Account Holder" << endl;
   cout << "2. Branch Manager" << endl;
@@ -168,6 +187,7 @@ void create_new_account_holder() {
   string passwd;
 
   try {
+    clrsrc();
     cout << "Enter your name" << endl;
     cin >> name;
     cout << "Enter your UserName" << endl;
@@ -175,13 +195,90 @@ void create_new_account_holder() {
     cout << "Enter your Password" << endl;
     cin >> passwd;
   } catch (...) {
-    invalid_argument("Cannot get Account holder info");
+    throw invalid_argument("Cannot get Account holder info");
+    press_enter_to_continue();
   }
-  BankAccountHolder acc_holder;
-  acc_holder.Name = name;
-  acc_holder.passwd = passwd;
-  acc_holder.Username = username;
-  account_holders.push_back(acc_holder);
+  try {
+    BankAccountHolder acc_holder;
+    acc_holder.Name = name;
+    acc_holder.passwd = passwd;
+    acc_holder.Username = username;
+    account_holders[username] = acc_holder;
+  } catch (...) {
+    throw invalid_argument("Cannot add account holder");
+    press_enter_to_continue();
+  }
+}
+
+void create_account() {
+  clrsrc();
+  cout << "Select Account type" << endl
+       << "1. Savings Account" << endl
+       << "2. Checking Account" << endl;
+  int opt = get_option_bw(1, 2);
+  try {
+    cout << "Enter Start Balance" << endl;
+    float start_bal;
+    cin >> start_bal;
+    cout << "Enter Interest Rate" << endl;
+    float interest;
+    cin >> interest;
+    curr_holder->createAccount(opt, start_bal, interest);
+  } catch (...) {
+    throw invalid_argument("");
+  }
+}
+
+void login_acc_holder() {
+  string username;
+  string passwd;
+
+  try {
+    clrsrc();
+    cout << "Enter your UserName" << endl;
+    cin >> username;
+    cout << "Enter your Password" << endl;
+    cin >> passwd;
+  } catch (...) {
+    throw invalid_argument("Cannot get Account holder info");
+    press_enter_to_continue();
+  }
+
+  try {
+    curr_holder = &account_holders[username];
+    if (curr_holder->passwd == passwd) {
+      cout << "You are logged in" << endl;
+    } else {
+      throw invalid_argument("Username or password invalid");
+      press_enter_to_continue();
+    }
+  } catch (...) {
+    throw invalid_argument("Username or password invalid");
+    press_enter_to_continue();
+  }
+
+  clrsrc();
+  cout << "What Operation You want to perform" << endl
+       << "1. Create Account" << endl
+       << "2. Select Account" << endl
+       << "3. View Statements" << endl
+       << "4. Delete Account" << endl;
+  int opt = get_option_bw(1, 4);
+  switch (opt) {
+  case 1:
+    try {
+      create_account();
+    } catch (...) {
+      cout << "Cannot create account" << endl;
+      press_enter_to_continue();
+    }
+  case 2:
+    break;
+  case 3:
+    break;
+  case 4:
+    break;
+  }
 }
 
 int main() {
@@ -192,15 +289,27 @@ int main() {
   while (!quit) {
     int user_type = who_you();
     if (user_type == 1) {
+      clrsrc();
       cout << "1. New User" << endl << "2. Existing User" << endl;
       int opt = get_option_bw(1, 2);
       if (opt == 1) {
-        create_new_account_holder();
+        try {
+          create_new_account_holder();
+        } catch (...) {
+          cout << "Cannot new create account holder" << endl;
+          press_enter_to_continue();
+        }
       } else {
+        try {
+          login_acc_holder();
+        } catch (...) {
+          cout << "Cannot login" << endl;
+          press_enter_to_continue();
+        }
       }
-
     } else {
     }
+    clrsrc();
     cout << "Do you want to quit?" << endl
          << "0. No" << endl
          << "1. Yes" << endl;
