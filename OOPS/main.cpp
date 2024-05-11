@@ -7,6 +7,18 @@
 
 using namespace std;
 
+struct Date {
+  int year;
+  int month;
+  int day;
+};
+typedef struct Date Date;
+
+struct Transaction {
+  string satement;
+  Date date;
+};
+
 class BankAccount;
 class BankAccountHolder;
 
@@ -15,15 +27,11 @@ const float SAVINGS_TRANS_MAX = 10000;
 
 int account_no_count = 0;
 vector<BankAccount *> bank_accounts;
+vector<BankAccountHolder> account_holders;
+vector<Transaction> transactions;
+
 BankAccount *curr_account;
 BankAccountHolder *curr_holder;
-
-struct Date {
-  int year;
-  int month;
-  int day;
-};
-typedef struct Date Date;
 
 Date get_current_date() {
   time_t currentTime = time(nullptr);
@@ -133,7 +141,7 @@ class BranchManager {
 public:
   string username;
   string passwd;
-  vector<BankAccount *> get_accounts() { return bank_accounts; }
+  vector<BankAccountHolder> get_account_holders() { return account_holders; }
 };
 
 int get_option_bw(int a, int b) {
@@ -154,12 +162,48 @@ int who_you() {
   return get_option_bw(1, 2);
 }
 
+void create_new_account_holder() {
+  string name;
+  string username;
+  string passwd;
+
+  try {
+    cout << "Enter your name" << endl;
+    cin >> name;
+    cout << "Enter your UserName" << endl;
+    cin >> username;
+    cout << "Enter your Password" << endl;
+    cin >> passwd;
+  } catch (...) {
+    invalid_argument("Cannot get Account holder info");
+  }
+  BankAccountHolder acc_holder;
+  acc_holder.Name = name;
+  acc_holder.passwd = passwd;
+  acc_holder.Username = username;
+  account_holders.push_back(acc_holder);
+}
+
 int main() {
-  int user_type = who_you();
-  switch (user_type) {
-  case 1:
-    break;
-  case 2:
-    break;
+  BranchManager branch_manager;
+  branch_manager.username = "root";
+  branch_manager.passwd = "root";
+  bool quit = false;
+  while (!quit) {
+    int user_type = who_you();
+    if (user_type == 1) {
+      cout << "1. New User" << endl << "2. Existing User" << endl;
+      int opt = get_option_bw(1, 2);
+      if (opt == 1) {
+        create_new_account_holder();
+      } else {
+      }
+
+    } else {
+    }
+    cout << "Do you want to quit?" << endl
+         << "0. No" << endl
+         << "1. Yes" << endl;
+    cin >> quit;
   }
 }
