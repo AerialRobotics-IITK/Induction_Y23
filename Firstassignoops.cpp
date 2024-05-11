@@ -1,20 +1,19 @@
 #include<iostream>
 #include<list>
 #include<string>
+#include<chrono>
 using namespace std ; 
 
 
 
+    const auto now = std::chrono::system_clock::now();
+    // Transform the time into a duration since the epoch
+    const auto epoch = now.time_since_epoch();
+    // Cast the duration into seconds
+    auto seconds = std::chrono::duration_cast<std::chrono::seconds>(epoch);
 
-    // get the current time 
-const auto now = std::chrono::system_clock::now();      
-// transform the time into a duration since the epoch 
-const auto epoch   = now.time_since_epoch();      
-// cast the duration into seconds 
-int seconds = std::chrono::duration_cast<std::chrono::seconds>(epoch);
-
-
-
+    // Convert seconds to integer
+    int secondsValue = static_cast<int>(seconds.count());
 int balancecap= 10000000;
 
 
@@ -68,7 +67,7 @@ void Savingaccount::closeSavingaccount( ){
 }
 
 int Savingaccount::getInterestRate(){
-    interestrate = 0.0000000000001*balance + 0.006*(seconds/(3600*24)) ;
+    interestrate = 0.0000000000001*balance + 0.006*(secondsValue/(3600*24)) ;
     if (interestrate<6){
     return interestrate;
 }
@@ -121,7 +120,8 @@ class Bankaccntholder{
     void createaccount() ;
     void setAccountDetails(BankAccount* accnt) ;
     int getAccountNumber();
-    list<BankAccount> ownaccounts();
+    list<Savingaccount> getownaccounts();
+     list<Currentaccount> getownaccounts2();
     BankAccount* accountDetails;
     string password;
     string username;
@@ -131,7 +131,8 @@ class Bankaccntholder{
    
    
     private:
-    list<BankAccount> ownaccounts;
+    list<Savingaccount> ownaccounts;
+    list<Currentaccount> ownaccounts2;
     string username;
     string Netbankingpass;
     
@@ -141,7 +142,7 @@ class Bankaccntholder{
 
  list<Bankaccntholder> accounts;
 
- int Bankaccntholder::getAccountNumber() const {
+ int Bankaccntholder::getAccountNumber() {
     if (accountDetails) {
         return accountDetails->Accountnumber;
     }
@@ -167,8 +168,13 @@ class Bankaccntholder{
     accountDetails = accnt;
   }
 
-list<BankAccount> Bankaccntholder::ownaccounts(){
+list<Savingaccount> Bankaccntholder::getownaccounts(){
     return ownaccounts;
+}
+
+
+list<Currentaccount> Bankaccntholder::getownaccounts2(){
+    return ownaccounts2;
 }
 
 void Bankaccntholder::get(string pass,string user){
@@ -267,12 +273,12 @@ void Bankaccntholder::createaccount(){
       std::cin>>reply;
       if (reply=="savings account"){
           Savingaccount SA ;
-          BAH.ownaccounts().push_back(SA);
+          BAH.getownaccounts().push_back(SA);
       }
 
       else if(reply=="current account"){
           Currentaccount CA ;
-         BAH.ownaccounts().push_back(CA);
+         BAH.getownaccounts2().push_back(CA);
       }
 }
 
@@ -282,22 +288,25 @@ void Bankaccntholder::createaccount(){
 class BranchManager{
     static BranchManager * Instance;
     BranchManager();
+    std::list<BankAccount> accounts;
 
     public:
+        void getbalance();
+        void getAccountnumber();
         void fastforward(int days);
         static BranchManager* getBM();
         void getAccountHolders();
         void getStatementofAccount();
+
         
 };
 
-BranchManager* Branchmanager :: Instance=nullptr;
+BranchManager* BranchManager :: Instance=nullptr;
 
-void BranchManager::fastforward(){
-    int days;
+void BranchManager::fastforward(int days){
      cout <<"How many days do you wanna skip"<<endl;
      cin>>days;
-    seconds=seconds - days*3600;
+    secondsValue=secondsValue - days*3600;
 }
 
 BranchManager::BranchManager(){
@@ -315,7 +324,7 @@ BranchManager*BranchManager::getBM()
 void BranchManager::getAccountHolders(){
     std::cout << "Bank Accounts:" << endl;
 for (const auto& account : accounts) {
-     std::cout << "Account Number: " << account.getAccountNumber() << endl;
+   //  std::cout << "Account Number: " << account.getAccountNumber() << endl;
 
 }
 }
@@ -323,7 +332,7 @@ for (const auto& account : accounts) {
 void BranchManager::getStatementofAccount(){
     std::cout << "Bank Accounts:" << endl;
 for (const auto& account : accounts) {
-     std::cout << "Bank Statement: " << account.getbalance() << endl;
+   //  std::cout << "Bank Statement: " << account.getbalance() << endl;
 
 }
 
