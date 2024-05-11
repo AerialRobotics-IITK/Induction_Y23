@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <chrono>
 #include <cstdio>
+#include <ctime>
 #include <iostream>
 #include <map>
 #include <stdexcept>
@@ -18,7 +19,8 @@ struct Date {
 typedef struct Date Date;
 
 struct Transaction {
-  string satement;
+  int acc_no;
+  string statement;
   Date date;
 };
 
@@ -73,11 +75,18 @@ public:
     }
   };
   void deposit(float amount) { balance += amount; };
-  void transfer(float amount, int acc_no) {
-    BankAccount *to_acc = &bank_accounts[acc_no];
+  void transfer(float amount, int ben_acc_no) {
+    BankAccount *to_acc = &bank_accounts[ben_acc_no];
     if (amount <= balance) {
       balance -= amount;
       to_acc->balance += amount;
+      Transaction trans;
+      string st = "Ammount " + to_string(amount) + " transferred from " +
+                  to_string(acc_no) + " to " + to_string(ben_acc_no);
+      trans.statement = st;
+      trans.date = get_current_date();
+      trans.acc_no = acc_no;
+      transactions.push_back(trans);
     } else {
       throw invalid_argument("Not possible not enough balance");
     }
@@ -91,10 +100,12 @@ public:
 
 public:
   void setInterestRate(float rate) {
-    if (interest_rate <= 6)
+    if (interest_rate <= 6) {
       interest_rate = rate;
-    else
-      throw invalid_argument("Interest rate cannot be higher than 6%");
+    } else {
+      cout << "Interest rate cannot be higher than 6%" << endl;
+      throw invalid_argument("Interest");
+    }
   }
 };
 
@@ -269,6 +280,17 @@ void view_balance() {
     cout << "Cannot Find Bank account" << endl;
   }
 }
+
+void view_statements() {
+  for (Transaction t : transactions) {
+    if (t.acc_no == curr_account->acc_no) {
+      printf("%d/%d/%d: ", t.date.day, t.date.month, t.date.year);
+      cout << t.statement << endl;
+    }
+  }
+  press_enter_to_continue();
+}
+
 void delete_account() {
   try {
     int acc_no = curr_account->acc_no;
@@ -339,6 +361,7 @@ void login_acc_holder() {
     break;
   case 4:
     select_account();
+    view_statements();
     break;
   case 5:
     select_account();
