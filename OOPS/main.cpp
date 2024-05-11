@@ -65,6 +65,7 @@ class BankAccount {
 public:
   int acc_no;
   int type;
+  float interest_rate;
   float balance;
   Date open_date;
   void withdraw(float amount) {
@@ -95,7 +96,6 @@ public:
 
 class SavingsAccount : public BankAccount {
 public:
-  float interest_rate;
   float getInterestRate() { return interest_rate; }
 
 public:
@@ -110,9 +110,6 @@ public:
 };
 
 class CheckingAccount : public BankAccount {
-public:
-  float interest_rate;
-
 public:
   void setInterestRate(float interest) { interest_rate = interest; }
 };
@@ -168,8 +165,32 @@ class BranchManager {
 public:
   string username;
   string passwd;
-  map<string, BankAccountHolder> get_account_holders() {
-    return account_holders;
+  void print_holders() {
+    cout << "Account Name:Account number" << endl;
+    for (const auto &pair : account_holders) {
+      for (int acc_no : pair.second.bankaccounts) {
+        cout << pair.second.Name << ':' << acc_no << endl;
+      }
+    }
+    press_enter_to_continue();
+  }
+  void view_all_statements() {
+    for (Transaction t : transactions) {
+      printf("%d/%d/%d: ", t.date.day, t.date.month, t.date.year);
+      cout << t.statement << endl;
+    }
+    press_enter_to_continue();
+  }
+  void fast_forward() {
+    cout << "Enter time in days" << endl;
+    int days;
+    cin >> days;
+    for (auto it = bank_accounts.begin(); it != bank_accounts.end(); ++it) {
+      it->second.balance +=
+          (it->second.balance * it->second.interest_rate * days / 365) / 100;
+    }
+    cout << "Fast forworded" << endl;
+    press_enter_to_continue();
   }
 };
 
@@ -397,6 +418,33 @@ int main() {
         }
       }
     } else {
+      cout << "Enter BranchManager Username" << endl;
+      string usr;
+      cin >> usr;
+      cout << "Enter BranchManager Password" << endl;
+      string passwd;
+      cin >> passwd;
+      if (branch_manager.username == usr && branch_manager.passwd == passwd) {
+        clrsrc();
+        cout << "1. Print statements of all accounts" << endl
+             << "2. Print Account Holder names" << endl
+             << "3. Fast Forward" << endl;
+        int ch = get_option_bw(1, 3);
+        switch (ch) {
+        case 1:
+          branch_manager.view_all_statements();
+          break;
+        case 2:
+          branch_manager.print_holders();
+          break;
+        case 3:
+          branch_manager.fast_forward();
+          break;
+        }
+
+      } else {
+        cout << "Username/Password Invalid" << endl;
+      }
     }
     clrsrc();
     cout << "Do you want to quit?" << endl
