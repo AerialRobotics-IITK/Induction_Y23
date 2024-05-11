@@ -28,7 +28,7 @@ const float SAVINGS_MIN = 100;
 const float SAVINGS_TRANS_MAX = 10000;
 
 int account_no_count = 0;
-vector<BankAccount *> bank_accounts;
+map<int, BankAccount *> bank_accounts;
 map<string, BankAccountHolder> account_holders;
 vector<Transaction> transactions;
 
@@ -117,7 +117,7 @@ public:
   map<int, BankAccount> get_accounts() { return bankaccounts; }
 
 public:
-  void createAccount(int type, float start_amount, float interest) {
+  int createAccount(int type, float start_amount, float interest) {
     try {
       switch (type) {
       case 1:
@@ -132,7 +132,7 @@ public:
         saving_acc.open_date = get_current_date();
         saving_acc.setInterestRate(interest);
         bankaccounts[saving_acc.acc_no] = saving_acc;
-        bank_accounts.push_back(&saving_acc);
+        bank_accounts[saving_acc.acc_no] = &saving_acc;
         break;
       case 2:
         CheckingAccount check_acc;
@@ -142,7 +142,7 @@ public:
         check_acc.open_date = get_current_date();
         check_acc.setInterestRate(interest);
         bankaccounts[check_acc.acc_no] = check_acc;
-        bank_accounts.push_back(&check_acc);
+        bank_accounts[check_acc.acc_no] = &check_acc;
         break;
       }
       account_no_count++;
@@ -150,6 +150,7 @@ public:
       cout << "Cannot create Account" << endl;
       press_enter_to_continue();
     }
+    return account_no_count;
   }
 };
 
@@ -223,9 +224,22 @@ void create_account() {
     cout << "Enter Interest Rate" << endl;
     float interest;
     cin >> interest;
-    curr_holder->createAccount(opt, start_bal, interest);
+    int acc_no = curr_holder->createAccount(opt, start_bal, interest);
+    cout << "Account Created with acc. no" << acc_no << endl;
+    press_enter_to_continue();
   } catch (...) {
     throw invalid_argument("");
+  }
+}
+void select_acc() {
+  try {
+    int acc_no;
+    cout << "Enter Account no: ";
+    cin >> acc_no;
+    curr_account = bank_accounts[acc_no];
+    printf("Account with acc.no %d selected\n", acc_no);
+  } catch (...) {
+    cout << "Cannot Find Bank account" << endl;
   }
 }
 
@@ -273,7 +287,7 @@ void login_acc_holder() {
       press_enter_to_continue();
     }
   case 2:
-    break;
+    select_acc();
   case 3:
     break;
   case 4:
