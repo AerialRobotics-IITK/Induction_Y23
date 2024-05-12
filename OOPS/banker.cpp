@@ -206,16 +206,16 @@ int main (){
                         cout << "For a checking/current account, press 2" << endl;
                         cout << "Press your choice: "; std::cin >> response;
                         int rupaiya;
+                        cout << "Enter your starting balance:"; std::cin >> rupaiya;
                         if(rupaiya>=1000){
                             if(response == 1){
-                                cout << "Enter your starting balance:"; std::cin >> rupaiya;
                                 Users[arrayNumber].addAccount(Account(accountNumber, "Savings", rupaiya));
                                 // ExistingAccounts.push_back(Account(accountNumber++, "Savings", rupaiya));
                                 cout << "Account successfully created" << endl;
                                 
                             }
                             else if(response == 2){  
-                                cout << "Enter your starting balance:"; std::cin >> rupaiya;
+                                // cout << "Enter your starting balance:"; std::cin >> rupaiya;
                                 Users[arrayNumber].addAccount(Account(accountNumber, "Checking/Current", rupaiya));
                                 // ExistingAccounts.push_back(Account(accountNumber++, "Checking/Current", rupaiya));
                                 cout << "Account successfully created" << endl;
@@ -321,15 +321,47 @@ int main (){
 
 
                 if(response == 1){
-                    for(int i=0; i < Users.size()<i++){
+                    for(int i=0; i < Users.size(); i++){
+                        cout << UsernamesInUses[i] << endl;
                         for(int j=0; j<Users[i].getNumberOfAccounts();j++){
-                            cout << (j+1) << "  " << Users[i].returnAccnum(j) << " : " <<  Users[i].returnAccType(j) <<endl;
+                            cout << "    " << (j+1) << ". " << Users[i].returnAccnum(j) << " : " <<  Users[i].returnAccType(j) <<endl;
                         }
+                        cout << endl;
                     }
                 }
 
                 else if(response == 2){
+                    int AN;
+                    int flag = 0;
+                    int arrayNumber=0;
+                    string AU;
+                    cout << "Enter the account's username: "; cin >> AU;
 
+                    for(auto UserNamesInUse : UsernamesInUses){                     
+                        if(UserNamesInUse == AU){
+                            flag =1;
+                            break;
+                        }
+                        else {
+                            arrayNumber++;
+                        }
+                    }
+
+                    if (!flag){
+                        cout << "USERNAME NOT FOUND" <<endl;
+                        // system("CLS");
+                        main();
+                    }
+
+                    Users[arrayNumber].getaccountNumber();
+                    cout << endl;
+                    cout << "Enter the Account Number: "; cin >> AN;
+                    for(int i=0; i< Users[arrayNumber].getNumberOfAccounts();i++){
+                        if(Users[arrayNumber].returnAccnum(i) == AN){
+                            Users[arrayNumber].getAccountStatement(i);
+                        }
+                    }
+                    main();
                 }
 
                 else{
