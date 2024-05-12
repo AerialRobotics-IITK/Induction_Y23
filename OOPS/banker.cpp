@@ -1,8 +1,3 @@
-
-// I have been having trouble integrating the various classes and components.
-// I couldn't understand how to link them. However, I have made the various classes and tried to implement the logic.
-
-
 #include <iostream>
 #include <vector>
 #include <string>
