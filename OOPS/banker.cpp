@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <ctime>
 
 using namespace std;
 
@@ -14,7 +15,7 @@ class Transaction {
 private:
     string description;
     double amount;
-
+    
 public:
     Transaction(const string& desc, double& amt) : description(desc), amount(amt) {}
 
@@ -118,8 +119,6 @@ void Account::getStatement() {
 }
 
 vector<User> Users;
-vector<Account> ExistingAccounts;
-
 
 int main (){
      int c;
