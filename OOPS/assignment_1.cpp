@@ -1,7 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
+int i = 0;
 time_t curr_time = time(0);
-char* date = ctime(&curr_time);
+char *date = ctime(&curr_time);
 string new_lin = "\n";
 class BankAccountHolder;
 // vector <BankAccountHolder> BAH;
@@ -19,7 +20,7 @@ private:
     long long int AccountNumber;
     double Balance;
     vector<string> transaction;
-    vector<string>& temp = transaction;
+    vector<string> &temp = transaction;
     string opening_date;
 
 public:
@@ -31,7 +32,7 @@ public:
         Balance += amt;
         string amt1 = to_string(amt);
         string cb = to_string(Balance);
-        string curr_date = date; 
+        string curr_date = date;
         string fin = strd + amt1 + strc + cb + date + new_lin;
         transaction.push_back(fin);
         // break;
@@ -47,7 +48,7 @@ public:
                 Balance -= amt;
                 string amt1 = to_string(amt);
                 string cb = to_string(Balance);
-                string curr_date = date; 
+                string curr_date = date;
                 string fin = strw + amt1 + strc + cb + date + new_lin;
                 transaction.push_back(fin);
                 break;
@@ -59,16 +60,20 @@ public:
             }
         } while (1);
     }
-    vector<string> getStatements(){
+    vector<string> getStatements()
+    {
         return temp;
     }
-    long long int acnum(void){
+    long long int acnum(void)
+    {
         return AccountNumber;
     }
-    float balance(void){
+    float balance(void)
+    {
         return Balance;
     }
-    double* ret_balance(){
+    double *ret_balance()
+    {
         return &Balance;
     }
     // void transfer(BankAccountHolder& user1,BankAccountHolder& user2,double trans_amt){
@@ -86,7 +91,7 @@ public:
     {
         return int_rate;
     }
-    
+
     // void set_int_rate(void)
     // {
     //     int_rate = rand() % 7;
@@ -137,11 +142,13 @@ public:
         getline(cin, name);
 
         cout << "Enter your username: ";
-        cin.ignore();
+        // cin.ignore();
         getline(cin, username);
         cout << "Enter your password: ";
-        cin.ignore();
+        // cin.ignore();
         getline(cin, password);
+        cout << "Online account setup,you can login to create a bank account now with user number : " << i <<" name : "<<name<<" with username : "<<username<<" and password : "<<password<<"\n";
+        i++;
         // tot_signed_up++;
     }
     // void getAccounts(void)
@@ -180,13 +187,13 @@ public:
             }
         } while (1);
     }
-    void createSAccount(BankAccount &user_account,Savings &suser_account)
+    void createSAccount(BankAccount &user_account, Savings &suser_account)
     {
         char str[4] = "SAV";
-        strcpy(type,str);
+        strcpy(type, str);
         long long int c = rand() % 1001;
         user_account.AccountNumber = c;
-        suser_account.AccountNumber =c;
+        suser_account.AccountNumber = c;
         cout << "You need a minimum balance of 500 to open the account,enter the money you want to deposit";
         cin.ignore();
         double balance;
@@ -211,18 +218,17 @@ public:
         string temp = "With Account Num : ";
         string temp1 = "With interest rate : ";
         string int_rate = to_string(suser_account.get_int_rate());
-        string curr_date = date; 
+        string curr_date = date;
         ope_sta = ope_sta + bal + temp + bal + temp1 + int_rate + date + new_lin;
         user_account.transaction.push_back(ope_sta);
-        
     }
-    void createCAccount(BankAccount &user_account,Current &cuser_account)
+    void createCAccount(BankAccount &user_account, Current &cuser_account)
     {
         char str[4] = "CUR";
-        strcpy(type,str);
+        strcpy(type, str);
         long long int c = rand() % 1001;
         user_account.AccountNumber = c;
-        cuser_account.AccountNumber =c;
+        cuser_account.AccountNumber = c;
         cout << "You need a minimum balance of 500 to open the account,enter the money you want to deposit";
         cin.ignore();
         double balance;
@@ -245,24 +251,25 @@ public:
         string bal = to_string(balance);
         string acnum = to_string(c);
         string temp = "With Account Num : ";
-        string curr_date = date; 
+        string curr_date = date;
         ope_sta = ope_sta + bal + temp + bal + date + new_lin;
         user_account.transaction.push_back(ope_sta);
-        
     }
-    string Username(void){
+    string Username(void)
+    {
         return username;
     }
-    string Password(void){
+    string Password(void)
+    {
         return password;
     }
     friend class BankManager;
 };
 
-vector <BankAccountHolder> BAH;
-vector <BankAccount> BA;
-vector <Savings> SBA;
-vector <Current> CBA;
+vector<BankAccountHolder> BAH;
+vector<BankAccount> BA;
+vector<Savings> SBA;
+vector<Current> CBA;
 class BankManager
 {
     // friend class BankAccount;
@@ -271,35 +278,40 @@ class BankManager
 public:
     string username;
     string password;
-    void getStatementOfAccount(int user_num){
-        cout<<"Your username : "<<BAH[user_num].Username()<<"\n"<<"The statement of your account reads as follows : ";
-        for(int i = 0;i<BA[user_num].getStatements().size();i++){
-            cout<<BA[user_num].getStatements()[i];
+    void getStatementOfAccount(int user_num)
+    {
+        cout << "Your username : " << BAH[user_num].Username() << "\n"
+             << "The statement of your account reads as follows : ";
+        for (int i = 0; i < BA[user_num].getStatements().size(); i++)
+        {
+            cout << BA[user_num].getStatements()[i];
         }
     }
-    void listofaccounts(int i){
-        for(int j = 0;j<i;j++){
-            cout<<"Name : "<<BAH[j].Username()<<"Account Number :"<<BA[j].acnum()<<"\n";
+    void listofaccounts(int i)
+    {
+        for (int j = 0; j < i; j++)
+        {
+            cout << "Name : " << BAH[j].Username() << "Account Number :" << BA[j].acnum() << "\n";
         }
     }
-    double fastforward(int days,Savings& account){
-        double* curr_bal = account.ret_balance();
+    double fastforward(int days, Savings &account)
+    {
+        double *curr_bal = account.ret_balance();
         double bal = *curr_bal;
         int int_rate = account.get_int_rate();
-        int num = days/30;
-        double new_bal = bal*(1+double(((num)*(int_rate)))/100);
-        // double* 
+        int num = days / 30;
+        double new_bal = bal * (1 + double(((num) * (int_rate))) / 100);
+        // double*
         *curr_bal = new_bal;
         string temp = "Your account has been fast-forwarded, new balance = ";
         string new_ba = to_string(new_bal);
-        string curr_date = date; 
+        string curr_date = date;
         string fin = temp + new_ba + curr_date + new_lin;
         return *curr_bal;
         // return new_bal;
         /*try to update the balance here like how to update a private variable here*/
     }
 };
-int i = 0;
 int main()
 {
     int check = 0;
@@ -321,63 +333,70 @@ int main()
                     BankAccountHolder user;
                     user.signup();
                     BAH.push_back(user);
-                    cout << "Online account setup,you can login to create a bank account now with user number : "<<i<<"\n";
-                    i++;
+                    
                 }
                 else if (tmp == 'L')
                 {
-                    cout<<"Enter your user number : ";
-                    cin.ignore();
+                    cout << "Enter your user number : ";
+                    // cin.ignore();
                     int user_num;
-                    cin>>user_num;
+                    cin >> user_num;
+                    cout<<user_num;
                     string tmp1;
                     string tmp2;
                     check = 0;
-                    cout << "Enter your username:";
+                    cout << "Enter your username: ";
                     cin.ignore();
                     getline(cin, tmp1);
-                    cout << "Enter your password:";
-                    cin.ignore();
+                    cout <<tmp1<< "Enter your password: ";
+                    // cin.ignore();
                     getline(cin, tmp2);
-                    if(!(strcmp(BAH[user_num].Username().c_str(),tmp1.c_str()) ) && !(strcmp(BAH[user_num].Password().c_str(),tmp2.c_str()) )){
+                    if (((BAH[user_num].Username()== tmp1)) && (BAH[user_num].Password() == tmp2))
+                    {
                         char tmp;
-                        cout<<"Enter Y if you want to create a bank account,S to view statement ,W to make withdrawl, D for a deposit and L for a logout\n";
+                        cout << "Enter Y if you want to create a bank account,S to view statement ,W to make withdrawl, D for a deposit and L for a logout\n";
                         cin.ignore();
-                        cin>>tmp;
-                        if(tmp == 'Y'){
+                        cin >> tmp;
+                        if (tmp == 'Y')
+                        {
                             char s;
-                            cout<<"enter S for a savings account and C for a current account";
+                            cout << "enter S for a savings account and C for a current account";
                             cin.ignore();
-                            cin>>s;
-                            if(s == 'S'){
-                            BAH[user_num].createSAccount(BA[user_num],SBA[user_num]);
+                            cin >> s;
+                            if (s == 'S')
+                            {
+                                BAH[user_num].createSAccount(BA[user_num], SBA[user_num]);
                             }
-                            else{
-                                BAH[user_num].createCAccount(BA[user_num],CBA[user_num]);
+                            else
+                            {
+                                BAH[user_num].createCAccount(BA[user_num], CBA[user_num]);
                             }
-                            
                         }
-                        else if(tmp == 'S'){
-                            for(int i = 0;i<BA[user_num].getStatements().size();i++){
-                                cout<<BA[user_num].getStatements()[i];
+                        else if (tmp == 'S')
+                        {
+                            for (int i = 0; i < BA[user_num].getStatements().size(); i++)
+                            {
+                                cout << BA[user_num].getStatements()[i];
                             }
-                            
                         }
-                        else if(tmp == 'W'){
+                        else if (tmp == 'W')
+                        {
                             double tmp;
-                            cout<<"Enter the amount you want to withdraw";
+                            cout << "Enter the amount you want to withdraw";
                             cin.ignore();
-                            cin>>tmp;
+                            cin >> tmp;
                             BA[user_num].withdraw(tmp);
                         }
-                        else if(tmp == 'D'){
+                        else if (tmp == 'D')
+                        {
                             double tmp;
-                            cout<<"Enter the amount you want to withdraw";
+                            cout << "Enter the amount you want to deposit";
                             cin.ignore();
-                            cin>>tmp;
+                            cin >> tmp;
                             BA[user_num].deposit(tmp);
                         }
-                        else{
+                        else
+                        {
                             break;
                         }
                     }
@@ -391,41 +410,45 @@ int main()
         else if (tmp == 'B')
         {
 
-            string tmp1,tmp2;
-            cout<<"Enter your username";
+            string tmp1, tmp2;
+            cout << "Enter your username : ";
             cin.ignore();
-            getline(cin,tmp1);
-            cout<<"Enter the password";
-            cin.ignore();
-            getline(cin,tmp2);
-            if(!strcmp(tmp1.c_str(),bm_user.c_str()) && !(tmp2.c_str(),bm_psswd.c_str())){
+            getline(cin, tmp1);
+            cout << "Enter the password : ";
+            // cin.ignore();
+            getline(cin, tmp2);
+            if ((tmp1 == bm_user) && (tmp2 ==  bm_psswd))
+            {
                 char tmp_man;
-                cout<<"Welcome Bank Manager\n";
+                cout << "Welcome Bank Manager\n";
                 BankManager bm;
-                cout<<"Press S if you want statement of any account,L is you want list of account holders along with their account numbers and F for fastforwarding aany account";
+                cout << "Press S if you want statement of any account,L is you want list of account holders along with their account numbers and F for fastforwarding aany account";
                 cin.ignore();
-                cin>>tmp_man;
-                if(tmp_man == 'S'){
-                    cout<<"Enter the user number for which details are required";
+                cin >> tmp_man;
+                if (tmp_man == 'S')
+                {
+                    cout << "Enter the user number for which details are required";
                     int a;
-                    cin>>a;
+                    cin >> a;
                     bm.getStatementOfAccount(a);
                 }
-                else if(tmp_man == 'L'){
+                else if (tmp_man == 'L')
+                {
                     bm.listofaccounts(i);
                 }
-                else if(tmp_man == 'F'){    
-                    int days,usr_num;
-                    cout<<"Enter the days and the user number(in that order)";
+                else if (tmp_man == 'F')
+                {
+                    int days, usr_num;
+                    cout << "Enter the days and the user number(in that order)";
                     // cin.ignore();
-                    cin>>days>>usr_num;
-                    double new_bal = bm.fastforward(days,SBA[usr_num]);
+                    cin >> days >> usr_num;
+                    double new_bal = bm.fastforward(days, SBA[usr_num]);
 
-                    cout<<"The new balance will be "<<new_bal;
+                    cout << "The new balance will be " << new_bal;
                 }
-
             }
-            else cout<<"!!You have entered wrong or unmatching credentials you are being taken to the main login page!!";
+            else
+                cout << "!!You have entered wrong or unmatching credentials you are being taken to the main login page!!";
             check = 0;
         }
         else
