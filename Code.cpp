@@ -4,7 +4,17 @@
 #include <chrono>
 #include <cmath>
 using namespace std;
-
+//forward declarations
+class AccountHolder;
+class BankAccount;
+class SavingsAccount;
+class CheckingAccount;
+class BranchManager;
+void page1();
+void page1_1();
+void page1_2();
+void page1_2_sl(int i);
+void page1_3();
 
 tm getDate(){
     auto now = std::chrono::system_clock::now();
@@ -47,31 +57,7 @@ class BankAccount {
                 cout<<"Insufficient Balance!!"<<endl;
             }
         };
-        void transfer(double amount, string traccno, string type){
-            if (type=="S"){
-                if (Balance>amount&&amount<30000){ //cap @ Rs30000
-                    Balance=Balance-amount;
-                    Statements.push_back("Transfer of Rs. "+ to_string(amount) +" to "+ traccno+" on "+to_string(currdate.tm_mday)+"/"+to_string(currdate.tm_mon+1)+"/"+to_string(currdate.tm_year+1900));
-                }
-                else if(Balance>amount&&amount>30000) {
-                    cout<<"Limit Exceeded, Transaction upto Rs.30000 is allowed!!"<<endl;
-                    sleep(3);
-                }
-                else{
-                    cout<<"\nInsufficient Balance!!"<<endl;
-                    sleep(3);
-                }
-            }
-            else{
-                if (Balance>amount){
-                    Balance=Balance-amount;
-                    Statements.push_back("Transfer of Rs. "+ to_string(amount) +" to "+ traccno+" on "+to_string(currdate.tm_mday)+"/"+to_string(currdate.tm_mon+1)+"/"+to_string(currdate.tm_year+1900));
-                }
-                else{
-                    cout<<"Insufficient Balance"<<endl;
-                }
-            }
-        }
+        void transfer(double amount, string traccno, string type);
         void getstatements(){
             cout<<"\n\n------TRANSACTION HISTORY------\n\n"<<endl;
             for(auto i: Statements) cout<<i<<endl;
@@ -165,6 +151,56 @@ class AccountHolder {
 AccountHolder accholders[100];
 int acnthldr_cntr=0;
 
+//defining fxn outside becoz of use of acchldr variable
+void BankAccount::transfer(double amount, string traccno, string type){
+            if (type=="S"){
+                if (Balance>amount&&amount<30000){ //cap @ Rs30000
+                    for(int i=0;i<acnthldr_cntr;i++ ){
+                        for (auto& j:accholders[i].ListOfAccounts){
+                            if (j->getaccountno()==traccno) {
+                                Balance=Balance-amount;
+                                j->deposit(amount);
+                                Statements.push_back("Transfer of Rs. "+ to_string(amount) +" to "+ traccno+" on "+to_string(currdate.tm_mday)+"/"+to_string(currdate.tm_mon+1)+"/"+to_string(currdate.tm_year+1900));
+                                cout<<"\nRs. "<<amount<<" transfered to "<<traccno<<"\n"<<endl;
+                                return;
+                            }
+                        };
+            
+                    };
+                    cout<<"**Account No. not in server**"<<endl;
+                }
+                else if(Balance>amount&&amount>30000) {
+                    cout<<"Limit Exceeded, Transaction upto Rs.30000 is allowed!!"<<endl;
+                    sleep(3);
+                }
+                else{
+                    cout<<"\nInsufficient Balance!!"<<endl;
+                    sleep(3);
+                }
+            }
+            else{
+                if (Balance>amount){
+                    for(int i=0;i<acnthldr_cntr;i++ ){
+                        for (auto& j:accholders[i].ListOfAccounts){
+                            if (j->getaccountno()==traccno) {
+                                Balance=Balance-amount;
+                                j->deposit(amount);
+                                Statements.push_back("Transfer of Rs. "+ to_string(amount) +" to "+ traccno+" on "+to_string(currdate.tm_mday)+"/"+to_string(currdate.tm_mon+1)+"/"+to_string(currdate.tm_year+1900));
+                                cout<<"\nRs. "<<amount<<" transfered to "<<traccno<<"\n"<<endl;
+                                return;
+                            }
+                        };
+            
+                    };
+                    cout<<"**Account No. not in server**"<<endl;
+                }
+                else{
+                    cout<<"Insufficient Balance"<<endl;
+                }
+            }
+        };
+
+
 class BranchManager {
     static BranchManager* instance;
     string Username;
@@ -216,13 +252,6 @@ public:
 
 BranchManager*  BranchManager::instance=NULL;
 
-//forward declaration
-void page1();
-void page1_1();
-void page1_2();
-void page1_2_sl(int i);
-void page1_3();
-
 void page1() {
         system("clear");
         cout<<"press 1: Account holder Signup (New Users Should Signup First)"<<endl;
@@ -234,7 +263,6 @@ void page1() {
         else page1_3();
         return;
 };
-
 void page1_1(){
     system("clear");
     string n,un,psd;
