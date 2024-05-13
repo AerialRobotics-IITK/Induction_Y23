@@ -1,0 +1,266 @@
+#include<bits/stdc++.h>
+#include<string>
+using namespace std;
+
+
+class branch_manager{
+private:
+	string bm_username="Aerial Robotics";
+	string bm_password="aerial.robotics.is.goat";
+public:
+	void getAccountHolders();
+	void getStatementOfAccount(long int accountNumber);
+};
+
+
+class bank_account_holder{
+public:
+	string name;
+	string username;
+
+	void change_password(string new_password);
+	void create_account();
+	void get_accounts(string username);
+	void set_net_banking_password();
+	void get_accountholder_details(){
+		cout<<"\nEnter username: ";
+        cin>>username;
+		cout<<"\nEnter Customer Name : ";
+        cin>>name;
+        cout<<"\nEnter net_banking_password: ";
+        cin>>net_banking_password;
+	}
+	void displayDetails(){
+        cout<<"\n\nCustomer Name : "<<name;
+        cout<<"\nusername : "<<username;
+    }
+private:
+	string net_banking_password;
+	vector<string>accounts;
+};
+
+void bank_account_holder :: change_password(string new_password){
+	net_banking_password=new_password;
+}
+void bank_account_holder :: get_accounts(string accountNumber){
+	
+}
+
+
+class bank_account{
+public:
+	long int accountNumber;
+
+
+
+};
+
+
+class checking_account : public bank_account_holder{
+private:
+	float checking_balance=0;
+	float interestRate;
+public:
+	void c_display(){
+		cout<<"\nBalance is:"<<checking_balance;
+	}
+	void c_deposit(){
+		float deposit;
+		cout<<"\nEnter amount to deposit:";
+		cin>>deposit;
+		checking_balance=checking_balance+deposit;
+	}
+	void c_withdraw(){
+		float withdraw;
+		cout<<"\nBalance:"<<checking_balance;
+		cout<<"\nEnter amount to withdraw:";
+		cin>>withdraw;
+		checking_balance=checking_balance-withdraw;
+	}
+	float getinterestRate(){
+        return interestRate;
+    };
+    void setinterestRate(float newRate){
+        interestRate = newRate;
+        cout << "new interest rate is " << interestRate << endl;
+    };
+};
+
+
+class savings_account : public bank_account_holder{
+private:
+	float savings_balance=0;
+public:
+	void s_display(){
+		cout<<"\nBalance is:"<<savings_balance;
+	}
+	void s_deposit(){
+		float deposit;
+		cout<<"\nEnter amount to deposit:";
+		cin>>deposit;
+		savings_balance=savings_balance+deposit;
+	}
+	void s_withdraw(){
+		float withdraw;
+		cout<<"\nBalance:"<<savings_balance;
+		cout<<"\nEnter amount to withdraw:";
+		cin>>withdraw;
+		if(withdraw<=100000){
+			savings_balance=savings_balance-withdraw;
+		}
+	}
+};
+
+
+
+int main(){
+	
+	
+    /*int key1;
+	string username1;
+	//long int account_number=100000000;
+	set<string>usernames_set;
+	cout<<"Enter -> 1 for Account Holder Login , 2 for Account Holder SignUp , 3 for Branch Manager Login:";
+	cin>>key1;
+	while(key1!=4){
+		if(key1==2){
+			cout<<"\n Enter username:";
+			cin>>username1;
+			while(usernames_set.count(username1)==1){
+				cout<<"username already exists , enter another:";
+				cin>>username1;
+			}
+				usernames_set.insert(username1);
+				cout<<"Enter -> 1 To create account , 2 for Exit:";
+		}
+		cout<<"Enter -> 1 for Account Holder Login , 2 for Account Holder SignUp , 3 for Branch Manager Login , 4 for Exit:";
+		cin>>key1;
+	}*/
+	
+	int key1,a3;
+	string a1,a2;
+	cout<<"Enter -> 1 for Account Holder Login , 2 for Account Holder SignUp , 3 for Branch Manager Login: , 4 for Exit";
+	cin>>key1;
+	switch(key1){
+	case 1:
+		break;
+	case 2:
+		checking_account c1;
+		savings_account s1;
+		char type;
+	    cout<<"\nEnter S to access savings account and C to access checking account : ";
+	    cin>>type;
+	    int key;
+	    if(type=='s' || type=='S')
+	    {
+	        s1.get_accountholder_details();
+	        
+	        while(1)
+	        {
+	            cout<<"\nChoose Your Choice"<<endl;
+	            cout<<"1)   Deposit"<<endl;
+	            cout<<"2)   Withdraw"<<endl;
+	            cout<<"3)   Display Balance"<<endl;
+	            cout<<"4)   Display with full Details"<<endl;
+	            cout<<"5)   Exit"<<endl;
+	            cout<<"Enter Your choice: ";
+	            cin>>key;
+	            switch(key)
+	            {
+	            case 1 :
+	                s1.s_deposit();
+	                break;
+	            case 2 :
+	                s1.s_withdraw();
+	                break;
+	            case 3 :
+	                s1.s_display();
+	                break;
+	            case 4 :
+	                s1.displayDetails();
+	                s1.s_display();
+	                break;
+	            case 5 :
+	                goto end;
+	            default:
+	                cout<<"\n\nEntered choice is invalid";
+	            }
+	        }
+	    }
+	    else if(type=='c' || type=='C')
+	    {
+	        c1.get_accountholder_details();
+	        while(1)
+	        {
+	            cout<<"\nChoose Your Choice"<<endl;
+	            cout<<"1)   Deposit"<<endl;
+	            cout<<"2)   Withdraw"<<endl;
+	            cout<<"3)   Display Balance"<<endl;
+	            cout<<"4)   Display with full Details"<<endl;
+	            cout<<"5)   Exit"<<endl;
+	            cout<<"Enter Your choice: ";
+	            cin>>key;
+	            switch(key)
+	            {
+	            case 1 :
+	                c1.c_deposit();
+	                break;
+	            case 2 :
+	                c1.c_withdraw();
+	                break;
+	            case 3 :
+	                c1.c_display();
+	                break;
+	            case 4 :
+	                c1.displayDetails();
+	                c1.c_display();
+	                break;
+	            case 5 :
+	                goto end;
+	            default:
+	                cout<<"\n\nEntered choice is invalid";
+	            }
+	        }
+	    }
+	    else
+	    {
+	        cout<<"\nInvalid Account Selection";
+	    }
+	end:
+	    cout<<"\nThank You for Banking with us..";
+	    return 0;
+		}
+	case 3:
+		branch_manager bm;
+        cout << "Enter branch manager username\n";
+        cin >> a1;
+        if(bm.username == a1){
+            cout << "Enter password\n";
+            cin >> a2;
+            if(bm.password == a2){
+                cout<< "YOu have logged in as Branch Manager." << endl ;
+                cout<<"Enter:\n";
+                cout<<"1. Get statement of accounts\n";
+                cout<<"2. Get account holders\n";
+                cout<<"3. Fast Forward\n";
+                cin>>a3;
+
+            }
+            else {
+                cout<<"Password did not match. Please try again." << endl ;
+            }
+        }
+        else {
+            cout<<"No such user found. Try again." << endl ;
+        }
+        break;
+
+    
+	case 4:
+		goto end;
+
+	default:
+    cout<<"No such option found. Please try again." << endl;
+    break;
+
+}
