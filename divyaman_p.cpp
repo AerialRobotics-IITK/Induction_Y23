@@ -31,8 +31,7 @@ public:
             transactionHistory.push_back("Withdrawal: " + std::to_string(amount));
         } else {
             std::cout << "Insufficient funds!" << std::endl;
-        }
-    }
+        } }
 
     virtual void displayStatement() {
         std::cout << "Account Number: " << accountNumber << std::endl;
@@ -40,8 +39,7 @@ public:
         std::cout << "Transaction History:" << std::endl;
         for (const auto& transaction : transactionHistory) {
             std::cout << transaction << std::endl;
-        }
-    }
+        } }
 
     std::string getAccountNumber() const {
         return accountNumber;
@@ -53,8 +51,7 @@ public:
 
     const std::vector<std::string>& getTransactionHistory() const {
         return transactionHistory;
-    }
-};
+    }};
 
 class SavingsAccount : public BankAccount {
 private:
@@ -64,8 +61,7 @@ public:
     SavingsAccount(double initialBalance, double rate) : BankAccount(initialBalance), interestRate(rate) {
         if (rate > 0.06) {
             interestRate = 0.06; // Cap interest rate at 6%
-        }
-    }
+        } }
 
     double getInterestRate() const {
         return interestRate;
@@ -74,8 +70,7 @@ public:
     void depositInterest() {
         double interest = balance * interestRate;
         deposit(interest);
-    }
-};
+    }};
 
 class CheckingAccount : public BankAccount {
 public:
@@ -123,8 +118,7 @@ public:
     ~BankAccountHolder() {
         for (auto& account : accounts) {
             delete account;
-        }
-    }
+        }}
 
     std::string getUsername() const {
         return username;
@@ -180,11 +174,7 @@ public:
                         for (const auto& transaction : account->getTransactionHistory()) {
                             statement.push_back(transaction);
                         }
-                        return statement;
-                    }
-                }
-            }
-        }
+                        return statement;}}} }
         throw std::invalid_argument("Account not found.");
     }
 
@@ -194,12 +184,7 @@ public:
                 for (auto& account : user.getAccounts()) {
                     SavingsAccount* savingsAccount = dynamic_cast<SavingsAccount*>(account);
                     if (savingsAccount) {
-                        savingsAccount->depositInterest();
-                    }
-                }
-            }
-        }
-    }
+                        savingsAccount->depositInterest();}}}}}
 
     bool authenticate(const std::string& user, const std::string& pass) const {
         return (user == username && pass == password);
@@ -402,10 +387,7 @@ void mainMenu(std::vector<BankAccountHolder>& users) {
                 break;
             default:
                 std::cout << "Invalid choice. Please try again." << std::endl;
-                break;
-        }
-    }
-}
+                break;}}}
 
 int main() {
     std::vector<BankAccountHolder> users;
