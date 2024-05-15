@@ -14,8 +14,6 @@ print(f"Server is listening on {IP_address}:{PORT}")
 clients = []
 usernames = np.array(["prasun"])
 passwords = np.array(["prasun"])
-bannedusers = np.array[""]
-bannedpass = np.array[""]
 
 def sendList(client , address):
     files = os.listdir()
@@ -62,29 +60,32 @@ def handleValidClient(client , address):
 
         if command == "LIST":
             sendList(client, address)
+            continue
 
         elif command == "STOR":
             filename = args[0]
             handle_STOR_command(client, address, filename)
+            continue
 
         elif command == "RETR":
             filename = args[0]
             handle_RETR_command(client, address, filename)
+            continue
 
         elif command == "QUIT":
             client.close()
 
-        elif command == "ADDUSER":
-            new_username = args[0]
-            new_password = args[1]
-            usernames = np.append(usernames, new_username)
-            passwords = np.append(passwords, new_password)
+        # elif command == "ADDUSER":
+        #     new_username = args[0]
+        #     new_password = args[1]
+        #     usernames = np.append(usernames, new_username)
+        #     passwords = np.append(passwords, new_password)
 
-        elif command == "DELUSER":
-            toBeremoved = args[0]
-            number = np.where(usernames== toBeremoved)[0]
-            passwords = np.delete(passwords, number)
-            usernames = np.delete(usernames, number)
+        # elif command == "DELUSER":
+        #     toBeremoved = args[0]
+        #     number = np.where(usernames== toBeremoved)[0]
+        #     passwords = np.delete(passwords, number)
+        #     usernames = np.delete(usernames, number)
             
 
 
@@ -103,21 +104,21 @@ def AcceptAndAuthenticate():
         client.send("Pass?".encode())
         password = client.recv(1024).decode()
 
-        if username == "admin123" and password == "admin123":
+        # if username == "admin123" and password == "admin123":
+        #     client.send("User valid".encode())
+        #     t = threading.Thread(target=handleValidClient, args=(client , addressess))
+        #     t.start()
+
+        #else :
+        index = np.where(usernames == username)[0]
+        if passwords[index[0]] == password:
             client.send("User valid".encode())
             t = threading.Thread(target=handleValidClient, args=(client , addressess))
             t.start()
 
-        else :
-            index = np.where(usernames == username)[0]
-            if passwords[index[0]] == password:
-                client.send("User valid".encode())
-                t = threading.Thread(target=handleValidClient, args=(client , addressess))
-                t.start()
-
-            else:
-                client.send("User Invalid".encode())
-                client.close()
+        else:
+            client.send("User Invalid".encode())
+            client.close()
         
 
 AcceptAndAuthenticate()

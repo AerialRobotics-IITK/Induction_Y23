@@ -166,13 +166,13 @@ def admin():
             print("Authentication Unsuccessful!\nTRY AGAIN!")
             client.close()
 
-def main():
-    response = input("Press 1 for user login\nPress 2 for admin login\n")
+# def main():
+#     response = input("Press 1 for user login\nPress 2 for admin login\n")
 
-    if response == 1:
-        user()
-    elif response == 2:
-        admin()
+#     if response == 1:
+#         user()
+#     elif response == 2:
+#         admin()
 
 
-main()
+user()
