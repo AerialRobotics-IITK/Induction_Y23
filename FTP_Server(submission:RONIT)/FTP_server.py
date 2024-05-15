@@ -7,8 +7,8 @@ USERS={}
 BAN=[]
 A_UNAME= "admin"
 A_PASSWORD="123"
-# HOST = socket.gethostbyname(socket.gethostname())
-HOST = "192.168.1.3"
+HOST = socket.gethostbyname(socket.gethostname())
+#HOST = "192.168.1.3"
 PORT=6968
 
 def getlist(client):
