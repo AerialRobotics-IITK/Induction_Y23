@@ -1,9 +1,8 @@
 import socket
-import time
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 IP_ADDR = (socket.gethostbyname(socket.gethostname()))
-port = 2002
+port = 2000
 
 client.connect((IP_ADDR, port))
 
@@ -21,7 +20,7 @@ while True:
             print("Size of file:", reply)
             received_bytes = 0
 
-            with open(filename, "wb") as file:
+            with open(request.split(" ")[2], "wb") as file:
                 while received_bytes < int(reply):
                     data = client.recv(1024)
                     received_bytes += len(data)
@@ -43,17 +42,40 @@ while True:
                 continue
         elif reply == "Starting upload.":
             client.send("ACK".encode("utf-8"))
+        elif reply == "Please Login first":
+            continue
         print(client.recv(1024).decode("utf-8"))
         with open(filename, "r") as file:
             data = file.read().encode("utf-8")
             client.send(f"{len(data)}".encode("utf-8"))
-            print("Data = ",data.decode("utf-8"))
             client.sendall(data)
             print(client.recv(1024).decode("utf-8"))
 
         print("File uploaded successfully")
         continue
+    elif request.split(" ")[0] == "QUIT":
+        client.send(request.encode("utf-8"))
+        print(client.recv(1024).decode("utf-8"))
+        break
+    elif request.split(" ")[0] == "ADDUSER":
+        client.send(request.encode("utf-8"))
+        reply = client.recv(1024).decode("utf-8")
+        if reply != "User already exists" or reply != "Please Login first":
+            print(client.recv(1024).decode("utf-8"))
+        continue
+    elif request.split(" ")[0] == "DELUSER":
+        client.send(request.encode("utf-8"))
+        reply = client.recv(1024).decode("utf-8")
+        if reply == "User directory not empty, do you want to delete anyway?":
+            reply = input(reply + " (Y/N): ")
+            client.send(reply.encode("utf-8"))
+            reply = client.recv(1024).decode("utf-8")
+            print(reply)
 
+            continue
+        else:
+            print(reply)
+        continue
     client.send(request.encode("utf-8"))
     reply = client.recv(1024).decode("utf-8")
     print(reply)
