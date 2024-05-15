@@ -66,6 +66,9 @@ def user():
             elif commandtype == "QUIT":
                 print("[DISCONNECTING] disconnecting from server...")
                 client.close()
+
+            else:
+                continue
         
         elif message == "OK":
             filename = args[0]
