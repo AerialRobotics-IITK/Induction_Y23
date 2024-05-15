@@ -3,9 +3,9 @@
 This is a simple file sharing server implemented in Python using sockets. The server allows users to create accounts, upload files, download files, and perform administrative tasks such as adding, deleting users, and banning/unbanning users.
 
 ## Prerequisites
-    ```bash
-    pip install -r requirements.txt #To use the same version of pandas that I used.
-    ```
+```bash
+pip install -r requirements.txt #To use the same version of pandas that I used.
+```
 ## Usage
 
 1. Run the server script:
