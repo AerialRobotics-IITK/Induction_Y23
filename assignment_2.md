@@ -7,3 +7,4 @@ I have created 3 lists of clients,their usernames and passwords. I check for whe
 ## Functions
  for storing and retreiving
 I have created deedicated functions for storing and retrieving files and have tried to handle errors in case the file is not found,etc.
+The admin fcuntionality is not operational currently, but will update it soon
