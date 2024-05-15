@@ -34,4 +34,19 @@ def send_message():
 
 # Function to receive messages from the server
 def receive_message():
-    while Tru
+    while True:
+        try:
+            messages = client.recv(1024)  # Receive messages from the server
+            print(messages.decode())  # Print the received messages
+        except:
+            print("An error occurred!")
+            client.close()
+            break
+
+# Create two threads, one for sending messages and one for receiving messages
+receive_thread = threading.Thread(target=send_message)
+send_thread = threading.Thread(target=receive_message)
+
+# Start the threads
+receive_thread.start()
+send_thread.start()
