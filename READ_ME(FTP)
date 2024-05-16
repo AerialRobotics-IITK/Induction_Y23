@@ -1,0 +1,5 @@
+1. OPEN ADMIN with username = ADMIN and password = AERIAL
+2. then select ADDUSER and enter new username password 
+3. Open client and login by this recently added username and password
+4. A pre defined user name = "asd" and password = "asd" is already there if you dont want to open ADMIN every time
+5. Every thing is working fine except the upld and retr part
