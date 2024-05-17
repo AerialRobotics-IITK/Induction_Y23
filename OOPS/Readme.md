@@ -17,6 +17,3 @@ You got your dream job in World Bank. To give other employees a run for their mo
  - View statement of any account
  - Get a list of all Account Holders
  - Fast Forward time to get returns on Savings Accounts
-
-##### PS
-I was travelling and was not able to complete everything. I will add the remaining functionallities in a few days.
