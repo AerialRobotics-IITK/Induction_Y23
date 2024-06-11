@@ -13,4 +13,6 @@
 <arg name="world_name" value="/usr/share/gazebo-11/worlds/robocup14_field.world"/>
 </include>
 
+<node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard" output="screen"/>
+
 </launch>
