@@ -45,7 +45,7 @@
 
       `catkin config`
 
-      ![Required Output](configout.png)
+      ![configout](https://github.com/vd-0711/Induction_Y23/assets/94589050/53b90dc0-3cbb-4040-ae79-d2eb78656122)
 
     - Now enter the linked *smb_common* directory and run the commands to build the package.
 
@@ -54,7 +54,7 @@
     - Error Handling :
       This may give an error as shown below. To solve this we need to install the required packages using `sudo apt install hector_gazebo_plugins` in the *src* directory itself. Don't forget to update your environment with `source ../devel/setup.bash`
              
-       ![hector error](error1.png)
+       ![error1](https://github.com/vd-0711/Induction_Y23/assets/94589050/88fa74cd-b1c1-47ff-a2c8-8d5076b9310c)
 
 --------------------------
 
@@ -142,7 +142,7 @@ linear_acceleration_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
 ```
 
-![imuout](rostopic_echo.png)
+![rostopic_echo](https://github.com/vd-0711/Induction_Y23/assets/94589050/0c2e9298-ca22-4f49-8faf-a1d2077d16cf)
 
 - `rostopic hz /imu0` output: gives frequency between most recent messages
 
