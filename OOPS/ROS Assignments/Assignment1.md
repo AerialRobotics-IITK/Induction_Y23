@@ -185,4 +185,9 @@ average rate: 392.343
 
 ### 4. Use keyboard to control
 
+- Download teleop keyboard using `sudo apt-get install ros-noetic-teleop-twist-keyboard`
+- Start the keyboard while the simulation is running using `rosrun teleop_twist_keyboard teleop_twist_keyboard.py`
+- Make sure terminal window is active and not gazebo otherwise the teleop keyboard will not detect inputs.
+  
+[Screencast from 12-06-24 01:08:28 AM IST.webm](https://github.com/vd-0711/Induction_Y23/assets/94589050/524cf40c-c56f-48f7-b0b4-7d4fed8fadb6)
 
