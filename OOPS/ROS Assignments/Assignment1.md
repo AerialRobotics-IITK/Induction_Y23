@@ -61,6 +61,7 @@
 ### 2. Launching and Inspection
 
 - Start a ros master using `roscore` in the *smd_common* directory. In a new terminal window run the following commands.
+- Start the simulation using `roslaunch smb_gazebo smb_gazebo.launch`
 
 - `rosnode list` output :
   
@@ -179,9 +180,13 @@ average rate: 392.343
 
 ![rqt_grpah](https://github.com/vd-0711/Induction_Y23/assets/94589050/73b029aa-5f8a-4585-b56a-48445c540095)
 
+----------------------
+
 ### 3. Command Desired Velocity from the terminal
 
 `rostopic pub -r 10 /cmd_vel geometry_msgs/Twist  '{linear:  {x: 0.7, y: 0.0, z: 0.0}, angular: {x: 0.0,y: 0.0,z: 5.0}}'`
+
+----------------------
 
 ### 4. Use keyboard to control
 
@@ -190,4 +195,21 @@ average rate: 392.343
 - Make sure terminal window is active and not gazebo otherwise the teleop keyboard will not detect inputs.
   
 [Screencast from 12-06-24 01:08:28 AM IST.webm](https://github.com/vd-0711/Induction_Y23/assets/94589050/524cf40c-c56f-48f7-b0b4-7d4fed8fadb6)
+
+--------------------
+
+### 5. Simulate a different world
+
+- Go to *smb_common/smb_gazebo/launch* directory and edit the contents of the launch file so as to change the name of the world arg to any world found in *smb_gazebo/worlds* folder.
+
+![Screenshot from 2024-06-12 01-25-44](https://github.com/vd-0711/Induction_Y23/assets/94589050/7d6c6d15-e154-4025-a0c6-1c7079796f5b)
+
+- Run the simulation same was as earlier using `roslaunch smb_gazebo smb_gazebo.launch` You should see a similar line in the output. The simulation will take some time to load the first time.
+
+![Screenshot from 2024-06-12 01-25-23](https://github.com/vd-0711/Induction_Y23/assets/94589050/a9cd860f-f06d-4ad4-ba9e-8d2294ae4e2c)
+
+- Voila!
+
+![Screenshot from 2024-06-12 01-25-10](https://github.com/vd-0711/Induction_Y23/assets/94589050/f41f7850-d551-4ec8-b3a9-f750a1327839)
+
 
