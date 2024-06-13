@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<launch>
+ 
+<arg name="use_sim_time" default="true"/>
+<arg name="world" default="gazebo_ros_range"/>
+<arg name="debug" default="false"/>
+<arg name="physics" default="ode"/>
+ 
+<group if="$(arg use_sim_time)">
+<param name="/use_sim_time" value="true" />
+</group>
+
+
+<include file="$(find smb_gazebo)/launch/smb_gazebo.launch">
+  <arg name="world_file" value="/usr/share/gazebo-11/worlds/robocup14_spl_field.world"/>
+  <arg name="laser_enabled" value="true"/>t
+</include>
+
+
+<node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard" output="screen"/>
+
+<node pkg="smb_highlevel_controller" type="smb_highlevel_controller" name="smb_highlevel_controller"/>
+
+<node pkg="smb_highlevel_controller" type="scan_subscriber" name="scan_subscriber">
+  <rosparam command="load" file="$(find smb_highlevel_controller)/config/config.yaml"/>
+</node>
+
+<node pkg="rviz" type="rviz" name="rviz"/>
+
+</launch>
