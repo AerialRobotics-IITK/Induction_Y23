@@ -65,21 +65,21 @@ catkin build
 > -   Run teleop_twist_keyboard
 > -source devel/setup.bash
 > -rosrun teleop_twist_keyboard teleop_twist_keyboard.py
-> - <!-- File: smb_custom_world.launch -->
-> - <launch>
-> -  <!-- Include the default smb_gazebo.launch file -->
-> -  <include file="$(find smb_gazebo)/launch/smb_gazebo.launch">
-> -     <!-- Override the world_file argument to use a different world -->
-> -    <arg name="world_file" value="/usr/share/gazebo-11/worlds/robocup14_spl_field.world"/>
-> -  </include>
-> - </launch>
+> - !-- File: smb_custom_world.launch --
+> - launch
+> -  !-- Include the default smb_gazebo.launch file --
+> -  include file="$(find smb_gazebo)/launch/smb_gazebo.launch"
+> - !-- Override the world_file argument to use a different world --
+>   arg name="world_file" value="/usr/share/gazebo-11/worlds/robocup14_spl_field.world"/
+> -  /include
+> - /launch
 > - Check if teleop_twist_keyboard is compiled
 > - roscd teleop_twist_keyboard
 > - Source the ROS setup script
 > - source /opt/ros/noetic/setup.bash
 > -    Start the custom launch file
 > - roslaunch smb_gazebo smb_custom_world.launch
-> - !(https://ethz.ch/content/dam/ethz/special-interest/mavt/robotics-n-intelligent-systems/rsl-dam/ROS2021/lec1/smb_common.zip)
+> - ![photo of the two terminals](https://ethz.ch/content/dam/ethz/special-interest/mavt/robotics-n-intelligent-systems/rsl-dam/ROS2021/lec1/smb_common.zip)
 
 
 
