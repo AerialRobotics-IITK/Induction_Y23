@@ -79,7 +79,7 @@ catkin build
 > - source /opt/ros/noetic/setup.bash
 > -    Start the custom launch file
 > - roslaunch smb_gazebo smb_custom_world.launch
-> - ![photo of the two terminals](https://ethz.ch/content/dam/ethz/special-interest/mavt/robotics-n-intelligent-systems/rsl-dam/ROS2021/lec1/smb_common.zip)
+
 
 
 
