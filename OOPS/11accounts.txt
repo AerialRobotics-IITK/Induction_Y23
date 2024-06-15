@@ -1,0 +1,6 @@
+AccNum Username Type Balance OpenDate
+231147 vidhi_0711 c 2311470 30 
+231148 vidhi_0711 s 400000 37
+231149 user23 s 60000 38
+231150 vidhi_0711 s 55000 43
+231151 user23 c 100000 48
