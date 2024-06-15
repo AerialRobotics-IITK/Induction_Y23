@@ -99,13 +99,13 @@ average rate: 50.025
   ```
  and it kept on going.......
 
-> ![alt text](./_1.png)
+> ![alt text](./images/_1.png)
 
 
 ### **3)**
 
 
-![alt text](./_2.png)
+![alt text](./images/_2.png)
 
 ### **4)**
  clone the repo:
@@ -126,7 +126,7 @@ run it:
 ```
 ### **5)**
 
-click <a href="./mylaunchfile.launch" >here</a> to view launch file.      
+click <a href="./files/mylaunchfile.launch" >here</a> to view launch file.      
 I have used ***big_map_summer_school.world***.   
 Save the file in  ***launch*** folder inside ***smb_gazebo*** file.   
  navigate to that launch directory and use
@@ -135,4 +135,4 @@ Save the file in  ***launch*** folder inside ***smb_gazebo*** file.
 ```
 ( I have named my file ***mylaunchfile.launch*** )
 
-> ![alt text](./_3.png)
+> ![alt text](./images/_3.png)
