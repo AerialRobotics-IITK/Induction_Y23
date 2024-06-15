@@ -126,7 +126,7 @@ run it:
 ```
 ### **5)**
 
-launch file is attached for viewing.   
+click <a href="./mylaunchfile.launch" >here</a> to view launch file.      
 I have used ***big_map_summer_school.world***.   
 Save the file in  ***launch*** folder inside ***smb_gazebo*** file.   
  navigate to that launch directory and use
