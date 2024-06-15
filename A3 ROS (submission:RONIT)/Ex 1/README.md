@@ -116,10 +116,9 @@ average rate: 50.025
 ```
 > ln -s ~/git/teleop_twist_keyboard/ ~/Workspace/smb_ws/src/
 ```
-build the package:
+build the package but first move to ~/Workspaces/smb_ws:
 ```
-> catkin build teleop_twist_keyboard `
-and run `rosrun teleop_twist_keyboard teleop_twist_keyboard.py
+> catkin build teleop_twist_keyboard 
 ```
 run it:
 ```
