@@ -38,6 +38,7 @@ public:
         this->interestRate = interestRate;
         this->accountType = accountType;
     }
+	
     string getAccountNumber() {
         return accountNumber;
     }
