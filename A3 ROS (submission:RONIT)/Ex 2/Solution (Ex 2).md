@@ -47,3 +47,6 @@ But the story doesn't end here. I also had to declare the functions and variable
 <br><br>
 
 # Pics 
+![alt text](./images/_1.png)
+![alt text](./images/_2.png)
+![alt text](./images/_3.png)
