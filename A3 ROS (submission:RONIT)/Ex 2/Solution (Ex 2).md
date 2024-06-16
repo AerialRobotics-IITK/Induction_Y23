@@ -22,7 +22,7 @@ queue_size: 100
 ```
 > click to see <a href="./files/smb_highlevel_controller/config/default.yaml">default.yaml</a>   
 
-Now to create a subscriber to the topic `/scan` I made changes in the ***SmbHighlevelController.cpp*** file. I added a `readParameters()` function to get the default parameters  and to return false if the parametes doesn't exist. then I subscribed to the topic while also passing a callback `scanCallback` function which  which outputs the smallest distance measurement from the vector *ranges* in the message of the laser scanner to the terminal.
+Now to create a subscriber to the topic `/scan` I made changes in the ***SmbHighlevelController.cpp*** file. I added a `readParameters()` function to get the default parameters  and to return false if the parametes doesn't exist. then I subscribed to the topic while also passing a callback `scanCallback` function which outputs the smallest distance measurement from the vector *ranges* in the message of the laser scanner to the terminal.
 
 > click to see <a href="./files/smb_highlevel_controller/src/SmbHighlevelController.cpp">SmbHighlevelController.cpp</a>
 
