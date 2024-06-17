@@ -1,0 +1,10 @@
+<launch>
+  <arg name="laser_enabled" default="true" />
+  <include file="$(find smb_gazebo)/launch/smb_gazebo.launch">
+    <arg name="laser_enabled" value="$(arg laser_enabled)" />
+  </include>
+  <include file="$(find smb_highlevel_controller)/launch/smb_highlevel_controller.launch" />
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find smb_highlevel_controller)/rviz/smb_config.rviz" />
+</launch>
+

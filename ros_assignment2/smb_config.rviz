@@ -1,0 +1,56 @@
+Panels:
+  - Class: rviz/Displays
+    Name: Displays
+  - Class: rviz/Views
+    Name: Views
+    Property Tree:
+      Expanded:
+        - /Displays
+        - /Global Options
+        - /Views
+    Tree Height: 228
+  - Class: rviz/Time
+    Name: Time
+
+# Global settings
+Global Options:
+  Background Color: [48, 48, 48]
+  Fixed Frame: odom
+  Frame Rate: 30
+
+# Add your displays here
+Displays:
+  - Class: rviz/Grid
+    Enabled: true
+    Name: Grid
+    Reference Frame: odom
+    Plane Cell Count: 10
+    Cell Size: 1
+
+  - Class: rviz/LaserScan
+    Enabled: true
+    Name: LaserScan
+    Topic: /scan
+    Size (m): 0.1
+    Color: 255; 255; 255
+    Style: Points
+
+  - Class: rviz/PointCloud2
+    Enabled: true
+    Name: PointCloud
+    Topic: /point_cloud
+    Style: Points
+    Size (Pixels): 3
+    Color Transformer: Intensity
+
+Views:
+  Current View: Top View
+  Saved Views:
+    - Name: Top View
+      Type: rviz/TopDownOrtho
+      Target Frame: odom
+      Eye: [0, 0, 100]
+      LookAt: [0, 0, 0]
+      Up: [0, 1, 0]
+      Scale: 1
+
