@@ -1,0 +1,4 @@
+scan_topic: "/scan"
+queue_size: 10
+pointcloud_topic: "/point_cloud"
+
