@@ -9,12 +9,12 @@ The solution package template is based on [ros_best_practices for python](http:/
 
 ### Output
 The solution output should be as follow:
-|![solution_2.png](ROS/solution_2.png)|
+|![solution_2.png](solution_2.png)|
 |:--:|
 | <b>Rviz with laserscan, terminal with output and gazebo</b>|
 
 ##### pointcloud_to_laserscan
-![pointcloud_to_laserscan.png](ROS/pointcloud_to_laserscan.png)|
+![pointcloud_to_laserscan.png](pointcloud_to_laserscan.png)|
 
 As can be seen from the `rqt_graph`, the `pointcloud_to_laserscan` node is subscribing to `/rslidar_points` which is a `PointCloud2` message and `/tf` and converts it into a `LaserScan` topic `/scan`.
 
@@ -54,7 +54,7 @@ Run the launch file with the  [smb_highlevel_controller](smb_highlevel_controlle
 
 ### Output
 The solution output should be as follow:
-|![solution_3.png](docs/image/solution_3.png)|
+|![solution_3.png](solution_3.png)|
 |:--:|
 | <b>Rviz with marker visualization indicate with the green color ball and tf marker, terminal with printed output such as the angle , and smb is heading towards the pillar in gazebo</b>|
 
@@ -94,7 +94,7 @@ The simulation can be run with the following command:
 To understand the EKF Localization Node, open another terminal, then open it with `rqt_graph`.
 
 The output is the following:
-|![solution_4_ekf_localization.png](ROS/solution_4_ekf_localization.png)|
+|![solution_4_ekf_localization.png](solution_4_ekf_localization.png)|
 |:--:|
 | <b>ekf_localization node in rqt_graph</b>|
 
@@ -102,7 +102,7 @@ As can be seen from the graph, the ekf localization subscribes to `/imu/data` an
 
 #### Plot of simulation x/y-plane
 The solution output should be as follow:
-|![solution_4_simulation.png](ROS/solution_4_simulation.png)|
+|![solution_4_simulation.png](solution_4_simulation.png)|
 |:--:|
 | <b>Plot of x/y-plane that is taken by SMB (Kp = 30, x_vel = 3 m/s) until it hits the pillar on rqt_multiplot</b>|
 
@@ -113,7 +113,7 @@ To get all the topics and messages inside the rosbag, run the following command:
 `rosbag info smb_navigation.bag`
 
 The solution should be as follow:
-![solution_4_rosbag_info.png](ROS/solution_4_rosbag_info.png)
+![solution_4_rosbag_info.png](solution_4_rosbag_info.png)
 
 To run the recorded rosbag, use the following command:
 
@@ -121,14 +121,14 @@ To run the recorded rosbag, use the following command:
 
 #### Plot of recorded x/y-plane
 The solution output should be as follow:
-|![solution_4_recorded.png](ROS/solution_4_recorded.png)|
+|![solution_4_recorded.png](solution_4_recorded.png)|
 |:--:|
 | <b>Plot of x/y-plane plot that is taken by SMB until the rosbag recording ends</b>|
 
 
 #### Visualization of 3D point cloud and TF marker in Rviz
 The 3D point cloud as well as `smb_top_view` frame can be visualize in rviz:
-|![solution_4_rviz.png](ROS/solution_4_rviz.png)|
+|![solution_4_rviz.png](solution_4_rviz.png)|
 |:--:|
 | <b>3D lidar point cloud and smb_top_view frame visualize in rviz</b>|
 
