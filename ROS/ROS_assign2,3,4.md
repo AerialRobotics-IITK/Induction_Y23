@@ -14,24 +14,21 @@ The solution output should be as follow:
 | <b>Rviz with laserscan, terminal with output and gazebo</b>|
 
 ##### pointcloud_to_laserscan
-![pointcloud_to_laserscan.png](pointcloud_to_laserscan.png)|
+![pointcloud_to_laserscan.png](pointcloud_to_laserscan(1).png)|
 
 As can be seen from the `rqt_graph`, the `pointcloud_to_laserscan` node is subscribing to `/rslidar_points` which is a `PointCloud2` message and `/tf` and converts it into a `LaserScan` topic `/scan`.
 
 ### Files
-#### [default_parameters.yaml](smb_highlevel_controller/config/default_parameters.yaml): 
+#### default_parameters: 
 * consist of parameters that are passed to the launch file.
 
-#### [smb_highlevel_controller](smb_highlevel_controller/nodes/smb_highlevel_controller): 
+#### smb_highlevel_controller: 
 * Initialize the `smb_highlevel_controller` node
 
-#### [SmbHighlevelController.py](smb_highlevel_controller/src/smb_highlevel_controller/SmbHighlevelController.py)
+#### SmbHighlevelController
 * Implementation of the class method including fetch parameters from launch
 * Subscribe to topics name based on parameters server
 * Implementation of callback method such as `scanCallback` and `pclCallback`.
-
-#### [smb_highlevel_controller.rviz](smb_highlevel_controller/rviz/smb_highlevel_controller.rviz): 
-* contains rviz file format which were created by running rviz seperately, adding the required display, and saving it into the rviz file.
 
 #### [smb_highlevel_controller.launch](smb_highlevel_controller/launch/smb_highlevel_controller.launch):
 * Add `<rosparam>` to load [default_parameters.yaml](smb_highlevel_controller/config/default_parameters.yaml) to parameter server.
