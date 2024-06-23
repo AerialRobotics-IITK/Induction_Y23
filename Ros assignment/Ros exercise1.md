@@ -77,7 +77,8 @@ Step 4: Exercise 1 - Setup and Simulation
         Source setup script: source /opt/ros/noetic/setup.bash.
 
 
-![alt](Ros assignment/WhatsApp Image 2024-06-23 at 11.37.36 PM.jpeg)
-![alt](Ros assignment/WhatsApp Image 2024-06-23 at 11.44.27 PM.jpeg)
+![alt]("Ros assignment/WhatsApp Image 2024-06-23 at 11.37.36 PM.jpeg")
+
+![alt]("Ros assignment/WhatsApp Image 2024-06-23 at 11.44.27 PM.jpeg")
 
 
