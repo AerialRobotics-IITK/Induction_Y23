@@ -31,5 +31,10 @@ apt install ros-noetic-diff-drive-controller
 apt install ros-noetic-robot-state-publisher
 ```
 After setting up `rviz` too, this is what it looked like.
+
+
 ![alt text](image-5.png)
 
+
+
+Source files are available under `smb_highlevel_controller/`
