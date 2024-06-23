@@ -76,3 +76,8 @@ Step 4: Exercise 1 - Setup and Simulation
         Change directory: roscd teleop_twist_keyboard.
         Source setup script: source /opt/ros/noetic/setup.bash.
 
+
+![alt](Ros assignment/WhatsApp Image 2024-06-23 at 11.37.36 PM.jpeg)
+![alt](Ros assignment/WhatsApp Image 2024-06-23 at 11.44.27 PM.jpeg)
+
+
