@@ -1,5 +1,4 @@
-## [Exercise 2](<docs/exercise/Exercise Session 2.pdf>)
-This exercise is based on [lecture 2](<docs/lecture/ROS Course Slides Course 2.pdf>).
+## [Exercise 2]
 
 Run the launch file with the following command:
 
@@ -30,22 +29,19 @@ As can be seen from the `rqt_graph`, the `pointcloud_to_laserscan` node is subsc
 * Subscribe to topics name based on parameters server
 * Implementation of callback method such as `scanCallback` and `pclCallback`.
 
-#### [smb_highlevel_controller.launch](smb_highlevel_controller/launch/smb_highlevel_controller.launch):
-* Add `<rosparam>` to load [default_parameters.yaml](smb_highlevel_controller/config/default_parameters.yaml) to parameter server.
-* Add `node` to launch the [smb_highlevel_controller.py](smb_highlevel_controller/scripts/smb_highlevel_controller.py) script.
+#### smb_highlevel_controller:
+* Add `<rosparam>` to load to parameter server.
+* Add `node` to launch  script.
 
-#### [CMakeLists.txt](smb_highlevel_controller/CMakeLists.txt):
+#### CMakeLists:
 * Add `find_package` and `catkin_package` to find libraries such as `rospy` and `sensor_msgs`.
 * Install python executable based on the project name with `catkin_install_python` .
-
-#### [package.xml](smb_highlevel_controller/package.xml)
 * Add `depend` for the dependencies which are `rospy`, `sensor_msgs` and `smb_gazebo`
-## [Exercise 3](<docs/exercise/Exercise Session 3.pdf>)
+  
+## Exercise 3
 **Note: Change `smb_common` package to `smb_common_v2` package**
 
-This exercise is based on [lecture 3](<docs/lecture/ROS Course Slides Course 3.pdf>).
-
-Run the launch file with the  [smb_highlevel_controller](smb_highlevel_controller/nodes/smb_highlevel_controller) with the following command:
+Run the launch file with the  following command:
 
 `roslaunch smb_highlevel_controller smb_highlevel_controller.launch`
 
@@ -56,10 +52,10 @@ The solution output should be as follow:
 | <b>Rviz with marker visualization indicate with the green color ball and tf marker, terminal with printed output such as the angle , and smb is heading towards the pillar in gazebo</b>|
 
 ### Files
-#### [CMakeLists.txt](smb_highlevel_controller/CMakeLists.txt) and [package.xml](smb_highlevel_controller/package.xml):
+#### CMakeLists.txt:
 * Add dependencies such as `geometry_msgs`, `tf2_ros`, and `visualization_msgs` package.
 
-#### [SmbHighlevelController.py](smb_highlevel_controller/src/smb_highlevel_controller/SmbHighlevelController.py):
+#### SmbHighlevelController:
 
 * Import `geometry_msgs`, `tf2_ros`, and `visualization_msgs` package.
 * Add two publisher for topics `visualization_marker` and `cmd_vel` during initialization.
@@ -68,17 +64,13 @@ The solution output should be as follow:
 * Utilize a P controller from the error angle to drive the error to zero on `move_to_goal`, the x velocity is set to constant without P controller to ensure that the SMB hits the pillar.
 * Publish a visualization marker on `vis_marker_publish` that can be displayed in Rviz.
 
-#### [smb_highlevel_controller.launch](smb_highlevel_controller/launch/smb_highlevel_controller.launch):
+#### smb_highlevel_controller:
 * Change the world argument value to `"$(find smb_highlevel_controller)/world/singlePillar.world"`
 * Add two arguments under `laser_scan_min_height` and `laser_scan_max_height` to -0.2 and 1.0 respectively.
 * Remove the `teleop_twist_keyboard` node from the launch.
-
-#### [smb_highlevel_controller.rviz](smb_highlevel_controller/rviz/smb_highlevel_controller.rviz):
 * Add `Marker` display to visualize the pillar marker indicated with green color ball.
 
-## [Exercise 4](<docs/exercise/Exercise Session 4.pdf>)
-
-This exercise is based on [lecture 3](<docs/lecture/ROS Course Slides Course 3.pdf>) and [lecture 4](<docs/lecture/ROS Course Slides Course 4.pdf>).
+## [Exercise 4]
 
 This exercise requires the use of rqt_multiplot. Run the following command to install rqt_multiplot:
 `sudo apt install -y ros-<distro>-rqt-multiplot`
@@ -133,22 +125,21 @@ The `smb_top_view` frame will move according to the `base_link` frame. As such, 
 
 ### Files
 
-#### [smb_navigation.bag](smb_highlevel_controller/bag/smb_navigation.bag):
+#### smb_navigation:
 * Contains 59.7 seconds of a recorded simulation.
 * The size of the bag is 158.9 MB with total messages of 1545.
 * The topics recorded are `/imu/data`, `join_states`, `rslidar_points`, and `smb_velocity_controller/odom`
-#### [xy_multiplot.xml](smb_highlevel_controller/config/xy_multiplot.xml):
+#### xy_multiplot:
 * Create an x/y-plane plot of the smb based on the output of the `ekf_localization` node which is `/odometry/filtered` with type `nav_msgs/Odometry`.
-#### [ekf_localization.rviz](smb_highlevel_controller/rviz/ekf_localization.rviz):
+#### ekf_localization:
 * Display TF, PointCloud2, and RobotModel of the smb
-#### [smb_highlevel_controller.launch](smb_highlevel_controller/launch/smb_highlevel_controller.launch):
-* Add rqt_multiplot node with [xy_multiplot.xml](smb_highlevel_controller/config/xy_multiplot.xml) to plot the path of smb in x/y plane.
+#### smb_highlevel_controller:
+* Add rqt_multiplot node to plot the path of smb in x/y plane.
 
-#### [ekf_localization.launch](smb_highlevel_controller/launch/ekf_localization.launch):
-* Refer from [control.launch](smb_common_v2/smb_control/launch/control.launch) file that is located on the `smb_control` package.
-* Add `ekf_robot_localization` node and load the required parameters from the [localization.yaml](smb_common_v2/smb_control/config/localization.yaml)
+#### ekf_localization:
+* Add `ekf_robot_localization` node and load the required parameters
 * Add `smb_robot_state_publisher` to publish state of the robot to tf2 that is visualize in rviz.
 * Create a frame called `smb_top_view` with `static_transform_publisher` node which is 2 meters above the `base_link` frame.
 * Add `rosbag` node to play rosbag with full speed or half speed.
-* Launch rviz with [ekf_localization.rviz](smb_highlevel_controller/rviz/ekf_localization.rviz) configuration.
-* Add rqt_multiplot node with [xy_multiplot.xml](smb_highlevel_controller/config/xy_multiplot.xml) to plot the path of smb in x/y plane.
+* Launch rviz with ekf_localization configuration.
+* Add rqt_multiplot node with xy_multiplot to plot the path of smb in x/y plane.
