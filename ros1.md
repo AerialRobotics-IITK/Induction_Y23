@@ -40,6 +40,9 @@ on zsh
 7. Running smb_gazebo with roslaunch
 `roslaunch smb_gazebo smb_gazebo.launch`
 
+## RoboCup world running
+![alt](images/robocup.png)
+
 ## ScreenShots
 ![alt](images/1.png)
 ![alt](images/2.png)
