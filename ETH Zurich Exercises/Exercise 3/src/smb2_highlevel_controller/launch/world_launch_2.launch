@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<launch>
+
+<arg name="use_sim_time" default="true"/>
+<arg name="world" default="gazebo_ros_range"/>
+<arg name="debug" default="false"/>
+<arg name="physics" default="ode"/>
+
+<group if="$(arg use_sim_time)">
+<param name="/use_sim_time" value="true" />
+</group>
+
+<include file="$(find smb_gazebo)/launch/smb_gazebo.launch">
+  <arg name="world_file" value="$(find smb2_highlevel_controller)/worlds/singlePillar.world"/>
+  <arg name="laser_enabled" value="true"/>
+</include>
+
+<node pkg="smb2_highlevel_controller" type="smb2_highlevel_controller_node" name="smb2_highlevel_controller_node">
+  <rosparam command="load" file="$(find smb2_highlevel_controller)/config/config.yaml"/>
+</node>
+
+<node pkg="rviz" type="rviz" name="rviz"/>
+
+
+</launch>
