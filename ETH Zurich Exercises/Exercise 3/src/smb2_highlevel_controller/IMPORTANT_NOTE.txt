@@ -1,0 +1,3 @@
+EVERYTHING in the smb2_highlevel_controller package was implemented by hand and not using any package building tools like catkin_create_pkg
+
+WHEREVER <buildtool_depend> tags have been marked with catkin have been done so by hand so that catkin build can identify it.
