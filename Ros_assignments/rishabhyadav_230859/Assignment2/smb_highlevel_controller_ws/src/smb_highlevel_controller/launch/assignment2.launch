@@ -1,0 +1,15 @@
+<launch>
+ 
+  <!-- Launch smb_highlevel_controller node -->
+  <node name="smb_highlevel_controller_node" pkg="smb_highlevel_controller" type="smb_highlevel_controller_node" output="screen">
+    <rosparam command="load" file="$(find smb_highlevel_controller)/config/params.yaml" />
+  </node>
+
+  <!-- Pass laser_enabled argument -->
+  <include file="$(find smb_gazebo)/launch/smb_gazebo.launch">
+    <arg name="laser_enabled" value="true" />
+  </include>
+
+  <!-- RViz configuration -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find smb_highlevel_controller)/rviz/smb_highlevel_config.rviz" />
+</launch>
