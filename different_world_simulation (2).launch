@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<launch>
+    <!-- Declare the laser_enabled argument and set its value to true -->
+    
+
+    <!-- Include the smb_gazebo.launch file and pass the laser_enabled argument -->
+    <include file="$(find smb_gazebo)/launch/smb_gazebo.launch">
+    	<arg name="laser_enabled" default="true" />
+        <arg name="world_file" value="/usr/share/gazebo-11/worlds/robocup14_spl_field.world"/>
+      
+    </include>
+
+    <!-- Node configuration -->
+    <node name="SmbHighlevelController" pkg="smb_highlevel_controller" type="smb_highlevel_controller" output="screen">
+        <rosparam command="load" file="$(find smb_highlevel_controller)/config/param.yaml"/>
+    </node>
+     <node type="rviz" name="rviz" pkg="rviz" args="-d $(find smb_highlevel_controller)/rviz/default.rviz" />
+
+</launch>
+
