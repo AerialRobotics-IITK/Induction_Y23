@@ -1,0 +1,4 @@
+subscriber_topic: /scan
+queue_size: 100
+x_velocity : 3.0 
+omega_z : 40
