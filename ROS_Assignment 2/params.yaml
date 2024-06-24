@@ -1,0 +1,3 @@
+scan_subscriber:
+  topic_name: "/scan"
+  queue_size: 1
