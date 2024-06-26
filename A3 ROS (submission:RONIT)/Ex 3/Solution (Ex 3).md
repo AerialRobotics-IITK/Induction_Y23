@@ -3,11 +3,11 @@
 ### Exercise Session 3
 
 
-> **NOTE:** In smb_common_v2, Publish frame odom on tf is disabled, because of which "odom" was not accessible in Rviz by default, So i commented out *line 14* in **smb_common_v2/smb_control/conig/contol.yaml**   
+> **NOTE:** In smb_common_v2, Publish frame odom on tf is disabled, because of which "odom" was not accessible in Rviz by default, So i commented out *line 14* in **smb_common_v2/smb_control/conig/control.yaml**   
 
 
 <br><br>
-<u> contol.yaml </u>
+<u> control.yaml </u>
 ```
 .
 .
