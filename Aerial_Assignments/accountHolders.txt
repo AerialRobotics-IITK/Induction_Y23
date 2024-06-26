@@ -1,0 +1,11 @@
+user1,user1
+ava,ava,116055698,30000,10000
+stella,stella&0@0#0$378788760
+guy1,guy1
+user2,pass2
+guy2,guy2
+meera,meera
+boy1,boy
+girl1,girl
+christian,christian
+belly,belly
