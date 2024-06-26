@@ -1,0 +1,39 @@
+#include <smb_highlevel_controller/SmbHighlevelController.hpp>
+
+namespace smb_highlevel_controller {
+
+SmbHighlevelController::SmbHighlevelController(ros::NodeHandle& nodeHandle) :
+  nodeHandle_(nodeHandle)
+{
+  if (!readParameters()) {
+    ROS_ERROR("Could not read parameters.");
+    ros::requestShutdown();
+  }
+  subscriber_ = nodeHandle_.subscribe(subscriberTopic_, queueSize_,
+                                      &SmbHighlevelController::scanCallback, this);
+  
+  ROS_INFO("Successfully launched node.");
+}
+
+
+SmbHighlevelController::~SmbHighlevelController()
+{
+}
+
+bool SmbHighlevelController::readParameters()
+{
+  if (!(nodeHandle_.getParam("subscriber_topic", subscriberTopic_) &&
+        nodeHandle_.getParam("queue_size", queueSize_))) {
+    return false;
+  }
+  return true;
+}
+
+void SmbHighlevelController::scanCallback(const sensor_msgs::LaserScan::ConstPtr& msg)
+{
+  auto min= *std::min_element(msg->ranges.begin(), msg->ranges.end());
+  ROS_INFO_STREAM("Smallest distance measurement :"<< min << std::endl ); 
+}
+
+
+} /* namespace */

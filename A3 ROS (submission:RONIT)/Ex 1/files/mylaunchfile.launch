@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<launch>
+	<include file="smb_gazebo.launch">
+		<arg name="world_file" value="$(find smb_gazebo)/worlds/big_map_summer_school.world"/>
+	</include>
+</launch>
