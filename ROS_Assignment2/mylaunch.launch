@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<launch>
+<include file="$(find smb_gazebo)/launch/smb_gazebo.launch">
+    <arg name="world_file" value="$(find smb_gazebo)/worlds/robocup14_spl_field.world"/>
+    <arg name="laser_enabled" value="true"/>             
+</include>
+
+<node pkg="smb_highlevel_controller" type="smb_highlevel_controller_node" name="smb_highlevel_controller" output="screen"> <!--Set to use smb_highlevel package-->
+    <rosparam command="load" file="$(find smb_highlevel_controller)/config/params.yaml" />
+    <arg name="topic_name" default="$(arg topic_name)" />
+    <arg name="queue_size" default="$(arg queue_size)" />
+    <param name="topic_name" value="$(arg topic_name)" />
+    <param name="queue_size" value="$(arg queue_size)" />
+</node>
+
+<node pkg="rviz" type="rviz" name="rviz"/> 
+</launch>
