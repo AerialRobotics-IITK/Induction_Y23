@@ -37,7 +37,7 @@ Did the following things to setup the machine:
     cmd_vel_publisher_ = nh.advertise<geometry_msgs::Twist>("/cmd_vel", 10);
     ```  
 
-* Made a callback function named ***CallBack*** in [SmbHighlevelController.cpp](./smb_highlevel_controller/src/pillar_detection.cpp) that receives the scanned data,interprets it and then publish vel to cmd_vel 
+* Made a callback function named ***CallBack*** in [pillar_detection.cpp](./src/smb_highlevel_controller/src/pillar_detection.cpp) that receives the scanned data,interprets it and then publish vel to cmd_vel 
 
  ## Question 5
  The logic of the P Controller is in the CallBack function itself
